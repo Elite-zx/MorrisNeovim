@@ -23,10 +23,6 @@ opt.background = "dark" -- Set background to dark
 cmd("filetype plugin indent on") -- Automatically detect file types
 cmd("filetype on") -- Enable filetype detection
 
--- Menu autocomplete
-opt.wildmenu = true -- Enable wildmenu for command-line completion
-opt.wildmode = "longest,full" -- Set wildmenu mode to 'longest, full'
-
 -- Encoding settings
 opt.encoding = "utf-8" -- Set internal encoding to utf-8
 opt.fileencodings = { "utf-8", "ucs-bom", "gb18030", "gbk", "gb2312", "cp936" } -- File encodings to try
@@ -77,11 +73,8 @@ opt.ai = true -- Enable auto-indentation
 opt.si = true -- Enable smart indentation
 opt.cindent = true -- Enable C-style indentation
 
--- ==========================
--- Other Settings
--- ==========================
-
--- Persistent undo settings
+-- UI
+opt.signcolumn = "yes" -- always show sign column
 
 -- ==========================
 -- Window Splitting & Layout

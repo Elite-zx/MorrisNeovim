@@ -11,7 +11,7 @@ map("c", "<F1>", "<nop>", opts)
 -- Quickly trigger Esc in insert mode with Ctrl-C
 map("i", "<C-c>", "<Esc>", opts)
 -- Toggle list characters display with F2
-map("n", "<F2>", ":<C-U>setlocal lcs=tab:>-,trail:-,eol:$ list! list?<CR>", opts)
+-- map("n", "<Fr>", ":<C-U>setlocal lcs=tab:>-,trail:-,eol:$ list! list?<CR>", opts)
 -- Better line navigation (keep cursor centered)
 map("n", "k", "gkzz", opts)
 map("n", "j", "gjzz", opts)

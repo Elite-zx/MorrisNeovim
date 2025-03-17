@@ -2,17 +2,70 @@ return {
 	-- Mason (LSP Manager)
 	{
 		"williamboman/mason.nvim",
-		lazy = false, -- 确保启动时加载
-		opts = {}, -- Mason 无需额外配置，直接启用
+		lazy = false,
+		opts = {},
 	},
 
-	-- Mason-LSPConfig (桥接 Mason 和 LSPConfig)
+	-- Mason-LSPConfig (Closes some gaps that exist between mason.nvim and lspconfig)
 	{
 		"williamboman/mason-lspconfig.nvim",
 		dependencies = { "williamboman/mason.nvim" }, -- 依赖 Mason
 		opts = {
-			ensure_installed = { "lua_ls", "pyright", "ts_ls", "clangd" }, -- 预安装的 LSP
+			-- -- A list of servers to automatically install if they're not already installed. Example: { "rust_analyzer@nightly", "lua_ls" }
+			ensure_installed = { "clangd", "lua_ls", "pyright", "ts_ls" },
+			-- Whether servers that are set up (via lspconfig) should be automatically installed if they're not already installed.
+			-- This setting has no relation with the `ensure_installed` setting.
 			automatic_installation = true,
+			handlers = {
+				-- default handler
+				function(server_name)
+					local capabilities = require("cmp_nvim_lsp").default_capabilities()
+					require("lspconfig")[server_name].setup({
+						-- cmp_nvim_lsp closes some gaps between nvim-cmp and nvim-lspconfig
+						-- Add cmp_nvim_lsp capabilities settings to lspconfig
+						-- This should be executed before you configure any language server
+						capabilities = capabilities,
+						on_attach = function(client, _)
+							-- Disable semantic highlights (hand it over to treesitter)
+							if client.server_capabilities.semanticTokensProvider then
+								client.server_capabilities.semanticTokensProvider = nil
+							end
+							-- Disable formatting capabilities (hand it over to conform.nvim)
+							client.server_capabilities.documentFormattingProvider = false
+							client.server_capabilities.documentFormattingRangeProvider = false
+						end,
+					})
+				end,
+				-- custom handler
+				lua_ls = function()
+					require("lspconfig").lua_ls.setup({
+						settings = {
+							Lua = {
+								runtime = {
+									-- Tell the language server which version of Lua you're using
+									-- (most likely LuaJIT in the case of Neovim)
+									version = "LuaJIT",
+								},
+								diagnostics = {
+									-- Get the language server to recognize the `vim` global
+									globals = {
+										"vim",
+										"require",
+									},
+								},
+								workspace = {
+									-- Make the server aware of Neovim runtime files
+									library = vim.api.nvim_get_runtime_file("", true),
+								},
+								-- Do not send telemetry data containing a randomized but unique identifier
+								telemetry = {
+									enable = false,
+								},
+							},
+						},
+					})
+				end,
+			},
 		},
 	},
 
@@ -20,74 +73,100 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" }, -- 延迟加载 LSP
-		dependencies = { "williamboman/mason-lspconfig.nvim" },
+		dependencies = { "williamboman/mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
 		config = function()
-			local lspconfig = require("lspconfig")
-			local capabilities = require("cmp_nvim_lsp").default_capabilities() -- 让 LSP 和补全联动
-			local servers = { "lua_ls", "pyright", "ts_ls", "clangd" }
-			for _, server in ipairs(servers) do
-				lspconfig[server].setup({
-					capabilities = capabilities,
-				})
-			end
+			-- This is where you enable features that only work
+			-- if there is a language server active in the file
+			vim.api.nvim_create_autocmd("LspAttach", {
+				desc = "LSP actions",
+				callback = function(event)
+					local opts = { buffer = event.buf }
 
-			-- Lua 语言服务器特定设置
-			lspconfig.lua_ls.setup({
-				settings = {
-					Lua = {
-						runtime = { version = "LuaJIT" }, -- 适用于 Neovim
-						diagnostics = { globals = { "vim", "require" } }, -- 让 LSP 识别 Neovim 变量
-						workspace = { library = vim.api.nvim_get_runtime_file("", true) }, -- 识别 Neovim 运行时
-						telemetry = { enable = false }, -- 禁用遥测
-					},
-				},
+					vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
+					vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
+					vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
+					vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
+					vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
+					vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+					vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
+					vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+					vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
+					vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+				end,
 			})
 		end,
 	},
 
-	-- LSP Signature (函数签名提示)
 	{
-		"ray-x/lsp_signature.nvim",
-		opts = {},
+		"hrsh7th/cmp-nvim-lsp",
+		dependencies = { "neovim/nvim-lspconfig" }, -- 依赖 LSPConfig
 	},
 
-	-- nvim-cmp (自动补全核心插件)
+	{
+		"L3MON4D3/LuaSnip",
+		dependencies = { "rafamadriz/friendly-snippets" }, -- 代码片段集合
+		opts = function()
+			local luasnip = require("luasnip")
+			require("luasnip.loaders.from_vscode").lazy_load() --  自动加载 VSCode 片段
+		end,
+	},
+
 	{
 		"hrsh7th/nvim-cmp",
-		event = "InsertEnter", -- 进入插入模式时加载
+		dependencies = {
+			"hrsh7th/cmp-nvim-lsp",
+			"L3MON4D3/LuaSnip",
+			"hrsh7th/cmp-buffer",
+			"onsails/lspkind.nvim",
+		},
 		opts = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
 
 			return {
-				mapping = cmp.mapping.preset.insert({
-					["<C-Space>"] = cmp.mapping.complete(), -- 手动触发补全
+				sources = {
+					{ name = "nvim_lsp" }, -- autocompletion
+					{ name = "luasnip" }, -- autosnippet
+					{ name = "buffer" }, -- source for words in all open buffers
+				},
 
-					-- 回车键行为
+				-- Let luasnip handle snippet from lsp for nvim-cmp
+				snippet = {
+					expand = function(args)
+						require("luasnip").lsp_expand(args.body)
+					end,
+				},
+
+				-- Preselect first item
+				preselect = "item", -- set 'none' to cancel
+				completion = {
+					completeopt = "menu,menuone,noinsert",
+				},
+				mapping = cmp.mapping.preset.insert({
+					-- `Enter` key to confirm completion
 					["<CR>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then
+						if cmp.visible() then -- completion menu is visible
 							if luasnip.expandable() then
-								luasnip.expand()
+								luasnip.expand() -- expend Snippet in snippet menu
 							else
-								cmp.confirm({ select = true }) -- 确认选择
+								cmp.confirm({ select = true }) -- confirm code completion
 							end
 						else
-							fallback()
+							fallback() -- do default behavior (input CR) if no menu exist
 						end
-					end, { "i", "s" }),
+					end, { "i", "s" }), -- mode limition
 
-					-- Tab 键行为
+					-- Super Tab
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
-							cmp.select_next_item()
+							cmp.select_next_item() -- navigate auto code completion menu
 						elseif luasnip.locally_jumpable(1) then
-							luasnip.jump(1) -- 跳转到下一个片段
+							luasnip.jump(1) -- navigate snippet completion menu
 						else
-							fallback()
+							fallback() -- do default behavior (input tab) if cmp or snippet not exists
 						end
 					end, { "i", "s" }),
 
-					-- Shift-Tab 反向跳转
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
 							cmp.select_prev_item()
@@ -98,62 +177,19 @@ return {
 						end
 					end, { "i", "s" }),
 				}),
-				sources = cmp.config.sources({
-					{ name = "nvim_lsp" }, -- LSP 补全
-					{ name = "luasnip" }, -- 代码片段
-					{ name = "buffer" }, -- 缓冲区补全
-					{ name = "path" }, -- 路径补全
-				}),
+				-- Add border to autocompletion menu
+				-- window = {
+				-- 	completion = cmp.config.window.bordered(),
+				-- 	documentation = cmp.config.window.bordered(),
+				-- },
 			}
 		end,
 	},
 
-	-- LuaSnip (代码片段引擎)
+	-- LSP Signature (函数签名提示)
 	{
-		"L3MON4D3/LuaSnip",
-		event = "InsertEnter",
-		version = "*",
-		dependencies = { "rafamadriz/friendly-snippets" },
-		opts = {
-			history = true,
-			update_events = "TextChanged,TextChangedI",
-			delete_check_events = "TextChanged,InsertLeave",
-			-- require("luasnip.loaders.from_vscode").lazy_load(),
-		},
-	},
-
-	-- friendly-snippets (预置代码片段集合)
-	{
-		"rafamadriz/friendly-snippets",
-		dependencies = { "L3MON4D3/LuaSnip" },
-	},
-	-- nvim-cmp LSP 支持
-	{
-		"hrsh7th/cmp-nvim-lsp",
-		dependencies = { "hrsh7th/nvim-cmp" },
-	},
-
-	-- nvim-cmp 缓冲区补全
-	{
-		"hrsh7th/cmp-buffer",
-		dependencies = { "hrsh7th/nvim-cmp" },
-	},
-
-	-- nvim-cmp 路径补全
-	{
-		"hrsh7th/cmp-path",
-		dependencies = { "hrsh7th/nvim-cmp" },
-	},
-
-	-- nvim-cmp 命令行补全
-	{
-		"hrsh7th/cmp-cmdline",
-		dependencies = { "hrsh7th/nvim-cmp" },
-	},
-
-	-- LuaSnip 代码片段补全
-	{
-		"saadparwaiz1/cmp_luasnip",
-		dependencies = { "hrsh7th/nvim-cmp", "L3MON4D3/LuaSnip" },
+		"ray-x/lsp_signature.nvim",
+		event = "VeryLazy", -- 在需要时加载
+		opts = {},
 	},
 }
