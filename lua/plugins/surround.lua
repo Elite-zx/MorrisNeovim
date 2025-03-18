@@ -1,7 +1,6 @@
 -- ==============================
 --  Better surround behavior
 -- ==============================
-
 return {
 	-- nvim-autoclose
 	{
@@ -20,5 +19,5 @@ return {
 				-- Configuration here, or leave empty to use defaults
 			})
 		end,
-	},
+	}
 }

@@ -2,6 +2,32 @@
 -- LSP for autocompletion
 -- ==============================
 
+-- on_attach is a callback function for a LSP server,
+-- which executed when lsp attached a buffer
+local function on_attach(client, bufnr)
+	-- 禁用语义高亮，交给 treesitter 处理
+	if client.server_capabilities.semanticTokensProvider then
+		client.server_capabilities.semanticTokensProvider = nil
+	end
+
+	-- 禁用 LSP 代码格式化（交给 conform.nvim 处理）
+	-- client.server_capabilities.documentFormattingProvider = false
+	-- client.server_capabilities.documentFormattingRangeProvider = false
+
+	-- 只格式化修改过的部分（lsp-format-modifications）
+	local augroup_id = vim.api.nvim_create_augroup("FormatModificationsDocumentFormattingGroup", { clear = false })
+	vim.api.nvim_clear_autocmds({ group = augroup_id, buffer = bufnr })
+
+	vim.api.nvim_create_autocmd("BufWritePre", {
+		group = augroup_id,
+		buffer = bufnr,
+		callback = function()
+			local lsp_format_modifications = require("lsp-format-modifications")
+			lsp_format_modifications.format_modifications(client, bufnr)
+		end,
+	})
+end
+
 return {
 	-- Mason (LSP Manager)
 	{
@@ -29,19 +55,13 @@ return {
 						-- Add cmp_nvim_lsp capabilities settings to lspconfig
 						-- This should be executed before you configure any language server
 						capabilities = capabilities,
-						on_attach = function(client, _)
-							-- Disable semantic highlights (hand it over to treesitter)
-							if client.server_capabilities.semanticTokensProvider then
-								client.server_capabilities.semanticTokensProvider = nil
-							end
-							-- Disable formatting capabilities (hand it over to conform.nvim)
-							client.server_capabilities.documentFormattingProvider = false
-							client.server_capabilities.documentFormattingRangeProvider = false
-						end,
+						on_attach = on_attach,
 					})
 				end,
 
 				-- custom handler
+				-- note that custom handler overwrite default handler
+				-- which means default handler's logic is not work for lsp server with custom handler
 				clangd = function()
 					local function get_binary_path_list(binaries)
 						local path_list = {}
@@ -119,6 +139,7 @@ return {
 							"--function-arg-placeholders", -- 补全时自动添加占位参数
 							"--fallback-style=llvm", -- 代码格式化风格
 						},
+						on_attach = on_attach,
 						commands = {
 							ClangdSwitchSourceHeader = {
 								function()
@@ -145,7 +166,9 @@ return {
 				end,
 
 				lua_ls = function()
+					local capabilities = require("cmp_nvim_lsp").default_capabilities()
 					require("lspconfig").lua_ls.setup({
+						capabilities = capabilities,
 						settings = {
 							Lua = {
 								runtime = {
@@ -401,5 +424,35 @@ return {
 		"ray-x/lsp_signature.nvim",
 		event = "VeryLazy", -- 在需要时加载
 		opts = {},
+	},
+
+	-- format
+	{
+		"joechrisellis/lsp-format-modifications.nvim",
+		event = "LspAttach",
+	},
+
+	{
+		"stevearc/conform.nvim",
+		opts = function()
+			vim.keymap.set("n", "<leader>w", function()
+				require("conform").format({ lsp_format = "fallback", async = true }) -- 触发格式化
+				vim.cmd("write") -- 保存文件
+			end, { desc = "Format and save buffer" })
+			return {
+				formatters_by_ft = {
+					lua = { "stylua" },
+					cpp = { "clang-format" },
+					c = { "clang-format" },
+					python = { "isort", "black" },
+					rust = { "rustfmt", lsp_format = "fallback" },
+				},
+
+				-- format_on_save = { -- These options will be passed to conform.format()
+				-- 	timeout_ms = 500,
+				-- 	lsp_format = "fallback",
+				-- },
+			}
+		end,
 	},
 }

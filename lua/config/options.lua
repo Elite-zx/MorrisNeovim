@@ -23,6 +23,9 @@ opt.background = "dark" -- Set background to dark
 cmd("filetype plugin indent on") -- Automatically detect file types
 cmd("filetype on") -- Enable filetype detection
 
+-- set language
+cmd("language en_US")
+
 -- Encoding settings
 opt.encoding = "utf-8" -- Set internal encoding to utf-8
 opt.fileencodings = { "utf-8", "ucs-bom", "gb18030", "gbk", "gb2312", "cp936" } -- File encodings to try

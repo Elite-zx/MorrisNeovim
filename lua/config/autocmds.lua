@@ -93,6 +93,7 @@ autocmd("BufEnter", {
 	end,
 })
 
+-- Open neovim with NvimTree opened
 autocmd("VimEnter", {
 	group = "__nvim_tree__",
 	callback = function()
@@ -111,3 +112,14 @@ autocmd("BufWinEnter", {
 		end
 	end,
 })
+
+-- Toggle alpha-nvim with tabnew
+autocmd("TabNewEntered", {
+	callback = function()
+		-- 仅在 buffer 为空时加载 alpha
+		if vim.fn.empty(vim.fn.expand("%")) == 1 then
+			require("alpha").start()
+		end
+	end,
+})
+
