@@ -2,6 +2,10 @@
 -- Search everying in neovim
 -- ==============================
 
+local actions = require("telescope.actions")
+local function fuzzy_grep()
+	require("telescope.builtin").grep_string({ search = "", only_sort_text = true })
+end
 return {
 	{
 		"nvim-telescope/telescope.nvim",
@@ -18,7 +22,8 @@ return {
 		keys = {
 			-- Find content with ripGrep among files under current directory
 			-- related: 'Telescope grep_string', Searches for the string under your cursor or selection in your current working director
-			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+			{ "<leader>fG", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+			{ "<leader>fg", fuzzy_grep, desc = "fuzzy grep" },
 			{ "<leader>fr", "<cmd>Telescope git_files<cr>", desc = "Find file under git repo" },
 			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fb", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find tags in the current buffer" },
@@ -64,14 +69,13 @@ return {
 			},
 			pickers = {
 				find_files = {
-
 					mappings = {
 						n = { -- normal mode
 							-- worked when option autochdir is false
 							["cd"] = function(prompt_bufnr)
 								local selection = require("telescope.actions.state").get_selected_entry()
 								local dir = vim.fn.fnamemodify(selection.path, ":p:h")
-								require("telescope.actions").close(prompt_bufnr)
+								actions.close(prompt_bufnr)
 								-- change
 								-- 1. cd: global
 								-- 2. lcd: current window
@@ -80,6 +84,11 @@ return {
 								vim.cmd(string.format("silent lcd %s", dir))
 							end,
 						},
+					},
+				},
+				live_grep = {
+					mappings = {
+						i = { ["<c-f>"] = actions.to_fuzzy_refine }, -- switch live_grep to fuzzy mode
 					},
 				},
 			},
