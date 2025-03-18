@@ -32,4 +32,5 @@ return {
 			options = { theme = "dracula-nvim" },
 		},
 	},
+	-- { "petertriho/nvim-scrollbar", opts = {} },
 }

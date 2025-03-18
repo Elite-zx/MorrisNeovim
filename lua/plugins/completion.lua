@@ -1,3 +1,7 @@
+-- ==============================
+-- LSP for autocompletion
+-- ==============================
+
 return {
 	-- Mason (LSP Manager)
 	{
@@ -36,7 +40,110 @@ return {
 						end,
 					})
 				end,
+
 				-- custom handler
+				clangd = function()
+					local function get_binary_path_list(binaries)
+						local path_list = {}
+						for _, binary in ipairs(binaries) do
+							local path = vim.fn.exepath(binary)
+							if path ~= "" then
+								table.insert(path_list, path)
+							end
+						end
+						return table.concat(path_list, ",")
+					end
+
+					local function switch_source_header_splitcmd(bufnr, splitcmd)
+						bufnr = require("lspconfig").util.validate_bufnr(bufnr)
+						local clangd_client = require("lspconfig").util.get_active_client_by_name(bufnr, "clangd")
+						local params = { uri = vim.uri_from_bufnr(bufnr) }
+						if clangd_client then
+							clangd_client.request("textDocument/switchSourceHeader", params, function(err, result)
+								if err then
+									error(tostring(err))
+								end
+								if not result then
+									vim.notify(
+										"Corresponding file can’t be determined",
+										vim.log.levels.ERROR,
+										{ title = "LSP Error!" }
+									)
+									return
+								end
+								vim.api.nvim_command(splitcmd .. " " .. vim.uri_to_fname(result))
+							end)
+						else
+							vim.notify(
+								"Method textDocument/switchSourceHeader is not supported by any active server on this buffer",
+								vim.log.levels.ERROR,
+								{ title = "LSP Error!" }
+							)
+						end
+					end
+
+					local capabilities = require("cmp_nvim_lsp").default_capabilities()
+					require("lspconfig").clangd.setup({
+						filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+						root_dir = function(fname)
+							return require("lspconfig.util").root_pattern(
+								".clangd",
+								".clang-tidy",
+								".clang-format",
+								"compile_commands.json",
+								"compile_flags.txt",
+								"configure.ac" -- AutoTools
+							)(fname) or vim.fs.dirname(vim.fs.find(".git", { path = fname, upward = true })[1])
+						end,
+
+						capabilities = vim.tbl_deep_extend(
+							"keep",
+							{ offsetEncoding = { "utf-16", "utf-8" } },
+							capabilities
+						),
+						single_file_support = true,
+						cmd = {
+							"clangd",
+							"-j=12", -- 线程数，提高索引性能
+							"--enable-config", -- 允许 `.clangd` 配置文件
+							"--background-index", -- 启用后台索引
+							"--pch-storage=memory", -- 预编译头存储在内存
+							"--query-driver=" .. get_binary_path_list({ "clang++", "clang", "gcc", "g++" }), -- 指定编译器路径
+							"--clang-tidy", -- 启用 `clang-tidy`
+							"--all-scopes-completion", -- 全作用域补全
+							"--completion-style=detailed", -- 详细补全
+							"--header-insertion-decorators", -- 头文件插入优化
+							"--header-insertion=iwyu", -- "Include What You Use" 模式
+							"--limit-references=3000", -- 限制引用搜索结果
+							"--limit-results=350", -- 限制符号搜索结果
+							"--function-arg-placeholders", -- 补全时自动添加占位参数
+							"--fallback-style=llvm", -- 代码格式化风格
+						},
+						commands = {
+							ClangdSwitchSourceHeader = {
+								function()
+									switch_source_header_splitcmd(0, "edit")
+								end,
+								description = "Open source/header in current buffer",
+							},
+							ClangdSwitchSourceHeaderVSplit = {
+								function()
+									switch_source_header_splitcmd(0, "vsplit")
+								end,
+								description = "Open source/header in a new vsplit",
+							},
+							ClangdSwitchSourceHeaderSplit = {
+								function()
+									switch_source_header_splitcmd(0, "split")
+								end,
+								description = "Open source/header in a new split",
+							},
+						},
+						-- g: go to header
+						vim.keymap.set("n", "<leader>gh", "<cmd>ClangdSwitchSourceHeader<CR>"),
+					})
+				end,
+
 				lua_ls = function()
 					require("lspconfig").lua_ls.setup({
 						settings = {
@@ -183,6 +290,109 @@ return {
 				-- 	documentation = cmp.config.window.bordered(),
 				-- },
 			}
+		end,
+	},
+
+	{
+		"dnlhc/glance.nvim",
+		cmd = "Glance",
+		keys = {
+			{ "<leader>gd", "<CMD>Glance definitions<CR>" },
+			{ "<leader>gR", "<CMD>Glance references<CR>" },
+		},
+		config = function()
+			local glance = require("glance")
+			local actions = glance.actions
+
+			glance.setup({
+				height = 18, -- Height of the window
+				zindex = 45,
+
+				-- When enabled, adds virtual lines behind the preview window to maintain context in the parent window
+				-- Requires Neovim >= 0.10.0
+				preserve_win_context = true,
+
+				-- Controls whether the preview window is "embedded" within your parent window or floating
+				-- above all windows.
+				detached = function(winid)
+					-- Automatically detach when parent window width < 100 columns
+					return vim.api.nvim_win_get_width(winid) < 100
+				end,
+				-- Or use a fixed setting: detached = true,
+
+				preview_win_opts = { -- Configure preview window options
+					cursorline = true,
+					number = true,
+					wrap = true,
+				},
+
+				border = {
+					enable = false, -- Show window borders. Only horizontal borders allowed
+					top_char = "―",
+					bottom_char = "―",
+				},
+
+				list = {
+					position = "right", -- Position of the list window 'left'|'right'
+					width = 0.33, -- Width as percentage (0.1 to 0.5)
+				},
+
+				theme = {
+					enable = true, -- Generate colors based on current colorscheme
+					mode = "auto", -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
+				},
+
+				mappings = {
+					list = {
+						["j"] = actions.next, -- Next item
+						["k"] = actions.previous, -- Previous item
+						["<Down>"] = actions.next,
+						["<Up>"] = actions.previous,
+						["<Tab>"] = actions.next_location, -- Next location (skips groups, cycles)
+						["<S-Tab>"] = actions.previous_location, -- Previous location (skips groups, cycles)
+						["<C-u>"] = actions.preview_scroll_win(5), -- Scroll up the preview window
+						["<C-d>"] = actions.preview_scroll_win(-5), -- Scroll down the preview window
+						["v"] = actions.jump_vsplit, -- Open location in vertical split
+						["s"] = actions.jump_split, -- Open location in horizontal split
+						["t"] = actions.jump_tab, -- Open in new tab
+						["<CR>"] = actions.jump, -- Jump to location
+						["o"] = actions.jump,
+						["l"] = actions.open_fold,
+						["h"] = actions.close_fold,
+						["<leader>l"] = actions.enter_win("preview"), -- Focus preview window
+						["q"] = actions.close, -- Closes Glance window
+						["Q"] = actions.close,
+						["<Esc>"] = actions.close,
+						["<C-q>"] = actions.quickfix, -- Send all locations to quickfix list
+						-- ['<Esc>'] = false -- Disable a mapping
+					},
+
+					preview = {
+						["Q"] = actions.close,
+						["<Tab>"] = actions.next_location, -- Next location (skips groups, cycles)
+						["<S-Tab>"] = actions.previous_location, -- Previous location (skips groups, cycles)
+						["<leader>l"] = actions.enter_win("list"), -- Focus list window
+					},
+				},
+
+				hooks = {}, -- Described in Hooks section
+
+				folds = {
+					fold_closed = "",
+					fold_open = "",
+					folded = true, -- Automatically fold list on startup
+				},
+
+				indent_lines = {
+					enable = true, -- Show indent guidelines
+					icon = "│",
+				},
+
+				winbar = {
+					enable = true, -- Enable winbar for the preview (requires neovim-0.8+)
+				},
+				use_trouble_qf = false, -- Quickfix action will open trouble.nvim instead of built-in quickfix list
+			})
 		end,
 	},
 

@@ -35,7 +35,7 @@ opt.tabstop = 2 -- Number of spaces that a tab character counts for
 -- opt.list = true             -- Optionally show tabs and spaces as visible characters
 
 -- Working directory follows file's directory
-opt.autochdir = true -- Automatically change directory to the file's directory
+opt.autochdir = false -- Automatically change directory to the file's directory
 
 -- Font settings (GUI version)
 opt.guifont = "Monaco 20" -- Set font for GUI versions of Vim

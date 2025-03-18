@@ -1,3 +1,7 @@
+-- ==============================
+-- Manage the working tree
+-- ==============================
+
 return {
 	{
 		"nvim-tree/nvim-tree.lua",

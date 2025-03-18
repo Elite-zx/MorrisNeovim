@@ -1,3 +1,7 @@
+-- ==============================
+-- Code autoformat
+-- ==============================
+
 return {
 	"stevearc/conform.nvim",
 	opts = {

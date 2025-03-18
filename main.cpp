@@ -1,6 +1,7 @@
+#include <functional>
 #include <iostream>
 
-int func(int a, int b) { return a + b; }
+int funcaa(int a, int b) { return a + b; }
 
 int main() {
   int a = 1;
