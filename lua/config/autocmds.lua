@@ -122,4 +122,3 @@ autocmd("TabNewEntered", {
 		end
 	end,
 })
-

@@ -1,5 +1,5 @@
 -- ==============================
--- LSP for autocompletion
+-- LSP for autocompletion and format
 -- ==============================
 
 -- on_attach is a callback function for a LSP server,
@@ -218,10 +218,14 @@ return {
 					vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
 					vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
 					vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
+					--  automatically rename all references of variable/class/func,
+					vim.keymap.set("n", "gR", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
+					-- show parameter prompts
 					vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-					vim.keymap.set("n", "<F2>", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-					vim.keymap.set({ "n", "x" }, "<F3>", "<cmd>lua vim.lsp.buf.format({async = true})<cr>", opts)
-					vim.keymap.set("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+					-- code action for quickfix:
+					-- 1. fix variable/class/func spell error
+					-- 2. import missing #include
+					vim.keymap.set("n", "gq", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
 				end,
 			})
 		end,
@@ -236,7 +240,6 @@ return {
 		"L3MON4D3/LuaSnip",
 		dependencies = { "rafamadriz/friendly-snippets" }, -- 代码片段集合
 		opts = function()
-			local luasnip = require("luasnip")
 			require("luasnip.loaders.from_vscode").lazy_load() --  自动加载 VSCode 片段
 		end,
 	},
@@ -425,6 +428,39 @@ return {
 		event = "VeryLazy", -- 在需要时加载
 		opts = {},
 	},
+	-- handle code error
+	{
+		"folke/trouble.nvim",
+		cmd = { "Trouble", "TroubleToggle", "TroubleRefresh" },
+		keys = {
+			-- l: list
+			{
+				-- d: diagnostics
+				"<leader>ld",
+				"<cmd>Trouble diagnostics toggle<cr>",
+				desc = "All opened buffer diagnostics (Trouble)",
+			},
+			{
+				"<leader>lD",
+				"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+				desc = "Current buffer diagnostics (Trouble)",
+			},
+			{
+				--s: symbols
+				--replace plugin aerial
+				"<leader>ls",
+				"<cmd>Trouble symbols toggle focus=false<cr>",
+				desc = "Code symbols outline  (Trouble)",
+			},
+			-- s: quickfix
+			{
+				"<leader>lq",
+				"<cmd>Trouble qflist toggle<cr>",
+				desc = "Quickfix List (Trouble)",
+			},
+		},
+		opts = {},
+	},
 
 	-- format
 	{
@@ -436,7 +472,7 @@ return {
 		"stevearc/conform.nvim",
 		opts = function()
 			vim.keymap.set("n", "<leader>w", function()
-				require("conform").format({ lsp_format = "fallback", async = true }) -- 触发格式化
+				require("conform").format({ lsp_format = "fallback" }) -- 触发格式化
 				vim.cmd("write") -- 保存文件
 			end, { desc = "Format and save buffer" })
 			return {

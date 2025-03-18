@@ -32,5 +32,15 @@ return {
 			options = { theme = "dracula-nvim" },
 		},
 	},
-	-- { "petertriho/nvim-scrollbar", opts = {} },
+
+	{
+		"lukas-reineke/indent-blankline.nvim",
+		main = "ibl",
+		opts = {},
+	},
+
+	{
+		"karb94/neoscroll.nvim",
+		opts = {},
+	},
 }

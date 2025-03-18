@@ -18,9 +18,9 @@ return {
 		keys = {
 			-- Find content with ripGrep among files under current directory
 			-- related: 'Telescope grep_string', Searches for the string under your cursor or selection in your current working director
-			{ "<leader>fg", "<cmd>Telescope live_grep<cr>",            desc = "Live grep" },
-			{ "<leader>fr", "<cmd>Telescope git_files<cr>",            desc = "Find file under git repo" },
-			{ "<leader>ff", "<cmd>Telescope find_files<cr>",           desc = "Find file" },
+			{ "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
+			{ "<leader>fr", "<cmd>Telescope git_files<cr>", desc = "Find file under git repo" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fb", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find tags in the current buffer" },
 
 			-- tags
@@ -64,6 +64,7 @@ return {
 			},
 			pickers = {
 				find_files = {
+
 					mappings = {
 						n = { -- normal mode
 							-- worked when option autochdir is false
@@ -87,8 +88,7 @@ return {
 		config = function(_, opts)
 			local ts = require("telescope")
 			ts.setup(opts)
-			ts.load_extension("fzf")
+			ts.load_extension("fzf") -- :h telescope-fzf-native
 		end,
-	}
-
+	},
 }
