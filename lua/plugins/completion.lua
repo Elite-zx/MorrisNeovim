@@ -238,23 +238,30 @@ return {
 
 	{
 		"L3MON4D3/LuaSnip",
+		build = "make install_jsregexp",
+		history = true,
+		update_events = "TextChanged,TextChangedI",
+		delete_check_events = "TextChanged,InsertLeave",
 		dependencies = { "rafamadriz/friendly-snippets" }, -- 代码片段集合
 		opts = function()
-			require("luasnip.loaders.from_vscode").lazy_load() --  自动加载 VSCode 片段
+			require("luasnip.loaders.from_lua").lazy_load()
+			require("luasnip.loaders.from_vscode").lazy_load()
+			require("luasnip.loaders.from_snipmate").lazy_load({ path = "~/.config/nvim/snippets" })
+			require("luasnip.loaders.from_snipmate").lazy_load()
 		end,
 	},
 
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
-			"hrsh7th/cmp-nvim-lsp",
 			"L3MON4D3/LuaSnip",
+			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
-			"onsails/lspkind.nvim",
 		},
 		opts = function()
 			local cmp = require("cmp")
 			local luasnip = require("luasnip")
+			local col = vim.fn.col(".") - 1
 
 			return {
 				sources = {
@@ -275,36 +282,28 @@ return {
 				completion = {
 					completeopt = "menu,menuone,noinsert",
 				},
-				mapping = cmp.mapping.preset.insert({
-					-- `Enter` key to confirm completion
-					["<CR>"] = cmp.mapping(function(fallback)
-						if cmp.visible() then -- completion menu is visible
-							if luasnip.expandable() then
-								luasnip.expand() -- expend Snippet in snippet menu
-							else
-								cmp.confirm({ select = true }) -- confirm code completion
-							end
-						else
-							fallback() -- do default behavior (input CR) if no menu exist
-						end
-					end, { "i", "s" }), -- mode limition
 
-					-- Super Tab
+				mapping = cmp.mapping.preset.insert({
+					["<CR>"] = cmp.mapping.confirm({ select = true }),
+
 					["<Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
-							cmp.select_next_item() -- navigate auto code completion menu
-						elseif luasnip.locally_jumpable(1) then
-							luasnip.jump(1) -- navigate snippet completion menu
+							cmp.select_next_item({ behavior = "select" })
+						elseif luasnip.expand_or_locally_jumpable() then
+							luasnip.expand_or_jump()
+						elseif col == 0 or vim.fn.getline("."):sub(col, col):match("%s") then
+							fallback()
 						else
-							fallback() -- do default behavior (input tab) if cmp or snippet not exists
+							cmp.complete()
 						end
 					end, { "i", "s" }),
 
+					-- Super shift tab
 					["<S-Tab>"] = cmp.mapping(function(fallback)
 						if cmp.visible() then
-							cmp.select_prev_item()
+							cmp.select_prev_item({ behavior = "select" })
 						elseif luasnip.locally_jumpable(-1) then
-							luasnip.jump(-1) -- 跳转到上一个片段
+							luasnip.jump(-1)
 						else
 							fallback()
 						end

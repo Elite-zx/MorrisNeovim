@@ -1,9 +1,10 @@
+#include <pthread.h>
+
+#include <cstdio>
 #include <iostream>
 #include <list>
+#include <utility>
 
 int func(int a, int b) { return a + b; }
 
-int main() {
-  int a = 1;
-  int b = 2;
-}
+mainn
