@@ -275,7 +275,7 @@ return {
 					completeopt = "menu,menuone,noinsert",
 				},
 
-				-- Let luasnip handle snippet from lsp for nvim-cmp
+				-- Let luasnip handle snippet expansion for nvim-cmp
 				snippet = {
 					expand = function(args)
 						luasnip.lsp_expand(args.body)
