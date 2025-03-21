@@ -246,7 +246,6 @@ return {
 		opts = function()
 			require("luasnip.loaders.from_lua").lazy_load()
 			require("luasnip.loaders.from_vscode").lazy_load()
-			require("luasnip.loaders.from_snipmate").lazy_load({ path = "~/.config/nvim/snippets" })
 			require("luasnip.loaders.from_snipmate").lazy_load()
 		end,
 	},
@@ -254,9 +253,9 @@ return {
 	{
 		"hrsh7th/nvim-cmp",
 		dependencies = {
-			"L3MON4D3/LuaSnip",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
+			{ "saadparwaiz1/cmp_luasnip", dependencies = { "L3MON4D3/LuaSnip" } },
 		},
 		opts = function()
 			local cmp = require("cmp")
@@ -270,17 +269,17 @@ return {
 					{ name = "buffer" }, -- source for words in all open buffers
 				},
 
-				-- Let luasnip handle snippet from lsp for nvim-cmp
-				snippet = {
-					expand = function(args)
-						require("luasnip").lsp_expand(args.body)
-					end,
-				},
-
 				-- Preselect first item
 				preselect = "item", -- set 'none' to cancel
 				completion = {
 					completeopt = "menu,menuone,noinsert",
+				},
+
+				-- Let luasnip handle snippet from lsp for nvim-cmp
+				snippet = {
+					expand = function(args)
+						luasnip.lsp_expand(args.body)
+					end,
 				},
 
 				mapping = cmp.mapping.preset.insert({

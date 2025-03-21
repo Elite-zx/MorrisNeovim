@@ -1,12 +1,26 @@
+# snippet trigger_word "desc" [opt]
+# ${0:default_value} # placeholder
+# content
+
+# special variable provided by snipmate:
+# ${VISUAL}	选中的文本（用于包裹选中内容）
+# ${TM_FILENAME}	当前文件名
+# ${TM_DIRECTORY}	当前文件所在目录
+# ${TM_FULLNAME}	用户全名
+# ${TM_CURRENT_LINE}	当前行内容
+# ${CLIPBOARD}	剪贴板内容
+
 extends c
 
-snippet mainn "Main function"
- int main()
- {
- ${0}
- return 0;
- }
-
-
+snippet ccf "ccf csp answer template"
+		#include <algorithm>
+		#include <cmath>
+		#include <iostream>
+		using namespace std;
+		${0}
+		int main (int argc, char *argv[]) {
+			
+			return 0;
+		}
 
 
