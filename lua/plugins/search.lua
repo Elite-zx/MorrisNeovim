@@ -6,6 +6,15 @@ local actions = require("telescope.actions")
 local function fuzzy_grep()
 	require("telescope.builtin").grep_string({ search = "", only_sort_text = true })
 end
+
+local function find_files_plus()
+	vim.ui.input({ prompt = "Search files in directory: ", completion = "dir" }, function(dir)
+		if dir and dir ~= "" then
+			require("telescope.builtin").find_files({ cwd = dir, hidden = true })
+		end
+	end)
+end
+
 return {
 	{
 		"nvim-telescope/telescope.nvim",
@@ -24,8 +33,9 @@ return {
 			-- related: 'Telescope grep_string', Searches for the string under your cursor or selection in your current working director
 			{ "<leader>fG", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
 			{ "<leader>fg", fuzzy_grep, desc = "fuzzy grep" },
+			{ "<leader>ff", find_files_plus, desc = "Find file with specific dir" },
+			{ "<leader>fF", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fr", "<cmd>Telescope git_files<cr>", desc = "Find file under git repo" },
-			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file" },
 			{ "<leader>fb", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find tags in the current buffer" },
 
 			-- tags

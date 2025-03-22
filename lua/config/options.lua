@@ -13,17 +13,17 @@ opt.cursorline = true -- Highlight the line with the cursor
 
 -- clipboard
 opt.clipboard = "unnamedplus"
-global.clipboard = {
-	name = "OSC 52",
-	copy = {
-		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-	},
-	paste = {
-		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
-		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
-	},
-}
+-- global.clipboard = {
+-- 	name = "OSC 52",
+-- 	copy = {
+-- 		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+-- 		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+-- 	},
+-- 	paste = {
+-- 		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
+-- 		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
+-- 	},
+-- }
 
 -- Syntax and colors
 cmd("syntax enable") -- Enable syntax highlighting
