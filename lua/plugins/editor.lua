@@ -19,5 +19,17 @@ return {
 				-- Configuration here, or leave empty to use defaults
 			})
 		end,
-	}
+	},
+
+	{
+		"smoka7/hop.nvim",
+		version = "*",
+		event = { "CursorHold", "CursorHoldI" },
+		keys = {
+			{ "<leader><leader>f", "<cmd>HopWord<CR>", desc = "Go to any word in the current buffer" },
+		},
+		opts = {
+			keys = "etovxqpdygfblzhckisuran",
+		},
+	},
 }

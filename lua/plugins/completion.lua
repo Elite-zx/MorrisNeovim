@@ -255,6 +255,7 @@ return {
 		dependencies = {
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
+			"hrsh7th/cmp-path",
 			{ "saadparwaiz1/cmp_luasnip", dependencies = { "L3MON4D3/LuaSnip" } },
 		},
 		opts = function()
@@ -267,6 +268,7 @@ return {
 					{ name = "nvim_lsp" }, -- autocompletion
 					{ name = "luasnip" }, -- autosnippet
 					{ name = "buffer" }, -- source for words in all open buffers
+					{ name = "path" },
 				},
 
 				-- Preselect first item

@@ -14,6 +14,6 @@ return {
 		},
 	},
 
-	{ "HiPhish/rainbow-delimiters.nvim", lazy = true },
+	{ "HiPhish/rainbow-delimiters.nvim", lazy = false },
 	{ "nvim-lua/plenary.nvim" },
 }

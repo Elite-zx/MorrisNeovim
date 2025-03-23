@@ -9,9 +9,15 @@ end
 
 local function find_files_plus()
 	vim.ui.input({ prompt = "Search files in directory: ", completion = "dir" }, function(dir)
-		if dir and dir ~= "" then
-			require("telescope.builtin").find_files({ cwd = dir, hidden = true })
+		-- 如果没有输入目录，则默认使用当前目录 "."
+		if not dir or dir == "" then
+			dir = "."
 		end
+
+		require("telescope.builtin").find_files({
+			cwd = dir,
+			hidden = true,
+		})
 	end)
 end
 
