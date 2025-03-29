@@ -12,20 +12,26 @@ opt.relativenumber = true -- Show relative line number
 opt.cursorline = true -- Highlight the line with the cursor
 
 -- clipboard
-vim.opt.clipboard = "unnamedplus"
-vim.g.clipboard = "osc52"
-
--- global.clipboard = {
--- 	name = "OSC 52",
--- 	copy = {
--- 		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
--- 		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
--- 	},
--- 	paste = {
--- 		["+"] = require("vim.ui.clipboard.osc52").paste("+"),
--- 		["*"] = require("vim.ui.clipboard.osc52").paste("*"),
--- 	},
--- }
+-- Yank (y)	写入 + 寄存器 → OSC52 → 本地剪贴板
+-- Paste (p)	从 + 寄存器直接读取内容（非 OSC52）
+local function paste()
+  return {
+    vim.fn.split(vim.fn.getreg(""), "\n"),
+    vim.fn.getregtype(""),
+  }
+end
+vim.o.clipboard = "unnamedplus"
+vim.g.clipboard = {
+  name = "OSC 52",
+  copy = {
+    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+  },
+  paste = {
+    ["+"] = paste,
+    ["*"] = paste,
+  },
+}
 
 -- Syntax and colors
 cmd("syntax enable") -- Enable syntax highlighting
