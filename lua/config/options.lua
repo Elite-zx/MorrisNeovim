@@ -12,7 +12,9 @@ opt.relativenumber = true -- Show relative line number
 opt.cursorline = true -- Highlight the line with the cursor
 
 -- clipboard
-opt.clipboard = "unnamedplus"
+vim.opt.clipboard = "unnamedplus"
+vim.g.clipboard = "osc52"
+
 -- global.clipboard = {
 -- 	name = "OSC 52",
 -- 	copy = {

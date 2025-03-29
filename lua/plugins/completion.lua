@@ -17,7 +17,6 @@ local function on_attach(client, bufnr)
 	-- 只格式化修改过的部分（lsp-format-modifications）
 	local augroup_id = vim.api.nvim_create_augroup("FormatModificationsDocumentFormattingGroup", { clear = false })
 	vim.api.nvim_clear_autocmds({ group = augroup_id, buffer = bufnr })
-
 	vim.api.nvim_create_autocmd("BufWritePre", {
 		group = augroup_id,
 		buffer = bufnr,
