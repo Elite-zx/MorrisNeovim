@@ -36,12 +36,10 @@ return {
 		},
 		keys = {
 			-- Find content with ripGrep among files under current directory
-			-- related: 'Telescope grep_string', Searches for the string under your cursor or selection in your current working director
-			{ "<leader>fG", "<cmd>Telescope live_grep<cr>", desc = "Live grep" },
-			{ "<leader>fg", fuzzy_grep, desc = "fuzzy grep" },
-			{ "<leader>ff", find_files_plus, desc = "Find file with specific dir" },
-			{ "<leader>fF", "<cmd>Telescope find_files<cr>", desc = "Find file" },
-			{ "<leader>fr", "<cmd>Telescope git_files<cr>", desc = "Find file under git repo" },
+			{ "<leader>fg", fuzzy_grep,                                desc = "fuzzy grep under cur dir" },
+			{ "<leader>fF", find_files_plus,                           desc = "Find file with specific dir" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>",           desc = "Find file under cur dir" },
+			{ "<leader>fr", "<cmd>Telescope git_files<cr>",            desc = "Find file under git repo" },
 			{ "<leader>fb", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find tags in the current buffer" },
 
 			-- tags
