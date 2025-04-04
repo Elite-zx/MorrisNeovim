@@ -44,7 +44,8 @@ map({ "n", "x" }, "H", "^")  -- Go to first non-blank character
 map({ "n", "x" }, "L", "g_") -- Go to last non-blank character
 
 -- Use very magic mode for all searches (less escaping)
-map("n", "/", [[/\v]])
+-- map("n", "/", [[/\v]])
+
 -- Change local working directory to current file's path and print it
 map("n", "<leader>cd", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change cwd" })
 

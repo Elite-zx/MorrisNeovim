@@ -2,151 +2,151 @@
 -- Basic Settings
 -- ==========================
 local opt          = vim.opt
-local cmd          = vim.cmd
-local api          = vim.api
 local global       = vim.g
+local fn           = vim.fn
 local utils        = require("config.utils")
 
+-- window
 opt.splitbelow     = true
 opt.splitright     = true
 opt.splitkeep      = 'screen'
+opt.previewheight  = 12
+opt.winminwidth    = 10
+opt.winwidth       = 30
 
--- Mapping delay and CursorHold trigger time
-opt.timeoutlen     = 500
-opt.updatetime     = 500
+-- Cursor
+opt.timeout        = true
+opt.timeoutlen     = 300 -- Mapping delay and
+opt.ttimeout       = true
+opt.ttimeoutlen    = 0
+opt.updatetime     = 200 --CursorHold trigger time
+opt.virtualedit    = 'block'
+opt.scrolloff      = 2
 
 -- Ignore certain files and directories when completing command line files
-opt.wildignore     = {
-	'*.o', '*.obj', '*.dylib', '*.bin', '*.dll', '*.exe',
-	'*/.git/*', '*/.svn/*', '*/__pycache__/*', '*/build/**',
-	'*.jpg', '*.png', '*.jpeg', '*.bmp', '*.gif', '*.tiff', '*.svg', '*.ico',
-	'*.pyc', '*.pkl',
-	'*.DS_Store',
-	'*.aux', '*.bbl', '*.blg', '*.brf', '*.fls', '*.fdb_latexmk', '*.synctex.gz', '*.xdv',
-}
+opt.wildignore     =
+".git,.hg,.svn,*.pyc,*.o,*.out,*.jpg,*.jpeg,*.png,*.gif,*.zip,**/tmp/**,*.DS_Store,**/node_modules/**,**/bower_modules/**"
 opt.wildignorecase = true
+opt.concealcursor  = "niv"
+opt.conceallevel   = 0
 
+-- Indentation s
+opt.smarttab       = true -- Enable smart tab behavior
+opt.tabstop        = 4    -- Number of spaces that a tab character counts for
+opt.autoindent     = true -- Enable smart indentation
+opt.jumpoptions    = "stack"
+opt.shiftwidth     = 4    -- Number of spaces to use for each indentation step
+opt.shiftround     = true
 
--- Indentation settings (for C++)
-opt.smarttab   = true -- Enable smart tab behavior
-opt.shiftwidth = 4    -- Number of spaces to use for each indentation step
-opt.tabstop    = 2    -- Number of spaces that a tab character counts for
-
--- Match brackets
+-- Matching bracket settings
 opt.matchpairs:append({ '<:>', '「:」', '『:』', '【:】', '“:”', '‘:’', '《:》' })
+opt.showmatch      = true -- Show matching brackets/parentheses
+
+-- completion
+opt.complete       = ".,w,b,k,kspell"
+opt.completeopt    = "menuone,noselect,popup"
+
+-- format
+opt.formatoptions  = "1jcroql"
+
+-- backup
+opt.backupskip     = "/tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*,/private/var/*,.vault.vim"
+
+-- short message
+opt.shortmess      = "aoOTIcF"
 
 -- Line numbers
-opt.number         = true  -- Show absolute line number
-opt.relativenumber = true  -- Show relative line number
-opt.cursorline     = true  -- Highlight the line with the cursor
+opt.number         = true -- Show absolute line number
+opt.relativenumber = true -- Show relative line number
+opt.cursorline     = true -- Highlight the line with the cursor
+opt.ruler          = true
 
 -- Search settings
-opt.ignorecase     = true  -- Ignore case in searches
-opt.smartcase      = true  -- Case-sensitive search when uppercase is used
+opt.ignorecase     = true -- Ignore case in searches
+opt.smartcase      = true -- Case-sensitive search when uppercase is used
 
 -- Encoding settings
-opt.fileencoding   = 'utf-8'
-opt.fileencodings  = { 'ucs-bom', 'utf-8', 'cp936', 'gb18030', 'big5', 'euc-jp', 'euc-kr', 'latin1' }
+opt.encoding       = "utf-8"
 
--- Automatic line wrap and prefix characters
+-- line wrap
+opt.wrap           = false
+opt.whichwrap      = "h,l,<,>,[,],~"
 opt.linebreak      = true
-opt.showbreak      = '↪'
-
--- 14. 命令补全模式与滚动
-opt.wildmode       = 'list:longest'
-opt.scrolloff      = 3
+opt.breakat        = [[\ \	;:,!?]]
+opt.showbreak      = "↳  "
+opt.breakindentopt = "shift:2,min:20"
 
 -- Turn on mouse support in normal mode, set mouse behavior and scroll step length
 opt.mouse          = 'n'
 opt.mousemodel     = 'popup'
-opt.mousescroll    = 'ver:1,hor:0'
+opt.mousescroll    = "ver:3,hor:6"
 
+-- Buffer
+opt.hidden         = true -- Allow buffer switching without saving
+opt.autowrite      = true
+opt.autoread       = true
+opt.switchbuf      = "usetab,uselast"
+opt.writebackup    = false
 
--- Allow buffer switching without saving
-opt.hidden      = true
-opt.autowrite   = true
-opt.autoread    = true
+-- statusline
+opt.showmode       = false
+opt.errorbells     = true
+opt.history        = 2000
+opt.list           = true
+opt.listchars      = "tab:»·,nbsp:+,trail:·,extends:→,precedes:←"
+opt.laststatus     = 3
 
-opt.showmode    = false
-opt.fileformats = { 'unix', 'dos' }
-opt.confirm     = true
-opt.visualbell  = true
-opt.errorbells  = false
-opt.history     = 500
-opt.list        = true
-opt.listchars   = {
-	tab = '▸ ',
-	extends = '❯',
-	precedes = '❮',
-	nbsp = '␣',
-}
+-- virtual
+opt.visualbell     = true
 
--- persistent undo
-local undodir   = vim.fn.expand("~/.vim/undo")
-if vim.fn.isdirectory(undodir) == 0 then
-	vim.fn.mkdir(undodir, "p")
-end
-opt.undofile    = true
-opt.undodir     = undodir
-opt.undolevels  = 1000
-opt.undoreload  = 10000
+-- color
+opt.termguicolors  = true
+opt.signcolumn     = "yes:1"
+opt.background     = "dark" -- Set background to dark
+opt.redrawtime     = 1500
+opt.synmaxcol      = 2500
 
--- Automatic alignment indentation to the next shiftwidth multiple; allows virtual cursor to be used in block selection for easy alignment editing
-opt.shiftround  = true
-opt.virtualedit = 'block'
+-- file
+opt.autochdir      = false -- Automatically change directory to the file's directory
+opt.swapfile       = false
+opt.fileformats    = "unix,mac,dos"
 
-
--- 25. 真彩色与光标、符号栏
-opt.termguicolors = true
-opt.signcolumn    = "yes:1"
-opt.background    = "dark"     -- Set background to dark
-
-
--- Remove == and commas from filename recognition characters
-opt.isfname:remove("==")
-opt.isfname:remove(",")
-
--- Forbid automatic line wrapping, turn off the default ruler display of the status bar, and set the command display position to the status bar
-opt.wrap = false
-opt.ruler = false
-opt.showcmdloc = 'statusline'
-
--- Working directory follows file's directory
-opt.autochdir = false -- Automatically change directory to the file's directory
-
--- Indentation settings
-opt.smartindent = true -- Enable smart indentation
-
--- Matching bracket settings
-opt.showmatch = true -- Show matching brackets/parentheses
-opt.showcmd = true   -- Show (partial) command in the last line
+-- command line
+opt.showcmd        = false -- Show (partial) command in the last line
+opt.cmdheight      = 1     -- 0, 1, 2
+opt.cmdwinheight   = 5
+opt.display        = "lastline"
+opt.helpheight     = 12
+opt.inccommand     = "nosplit"
 
 -- Backspace behavior
-opt.backspace = "indent,eol,start" -- Allow backspace over indentation, end of line, and start of line
+opt.backspace      = "indent,eol,start" -- Allow backspace over indentation, end of line, and start of line
 
 -- Search highlighting
-opt.hlsearch = true  -- Highlight search matches
-opt.incsearch = true -- Incremental search (matches are displayed gradually)
-
--- Auto-indentation
-opt.ai = true      -- Enable auto-indentation
-opt.si = true      -- Enable smart indentation
-opt.cindent = true -- Enable C-style indentation
+opt.hlsearch       = true -- Highlight search matches
+opt.incsearch      = true -- Incremental search (matches are displayed gradually)
+opt.wrapscan       = true
 
 
 -- disable netrw at the very start of your init.lua
-global.loaded_netrw = 1
+global.loaded_netrw       = 1
 global.loaded_netrwPlugin = 1
 
+
+-- session
+opt.sessionoptions = "buffers,curdir,folds,help,tabpages,winpos,winsize"
+opt.shada          = "!,'500,<50,@100,s10,h" -- shared data file
+
 -- clipboard
--- Yank (y)	写入 + 寄存器 → OSC52 → 本地剪贴板
--- Paste (p)	从 + 寄存器直接读取内容（非 OSC52）
-vim.o.clipboard = "unnamedplus"
-vim.g.clipboard = {
+-- Yank with OSC52
+-- Paste with register
+local osc52        = require("vim.ui.clipboard.osc52")
+vim.o.clipboard    = "unnamedplus"
+vim.g.clipboard    = {
 	name = "OSC 52",
 	copy = {
-		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+		["+"] = osc52.copy("+"),
+		["*"] = osc52.copy("*"),
 	},
 	paste = {
 		["+"] = utils.paste,
@@ -154,12 +154,19 @@ vim.g.clipboard = {
 	},
 }
 
--- log
-opt.verbose = 15
-opt.verbosefile = vim.fn.stdpath('cache') .. '/nvim_verbose.log'
-
 -- If ripgrep exists in the system, use it as the default grep tool
-if vim.fn.executable('rg') == 1 then
-	opt.grepprg = 'rg --vimgrep --no-heading --smart-case'
+if fn.executable('rg') == 1 then
+	opt.grepprg = "rg --hidden --vimgrep --smart-case --"
 	opt.grepformat = '%f:%l:%c:%m'
 end
+
+-- automatically create undo file
+local undodir = fn.expand("~/.vim/undo")
+if fn.isdirectory(undodir) == 0 then
+	fn.mkdir(undodir, "p")
+end
+-- persistent undo
+opt.undofile   = true
+opt.undodir    = undodir
+opt.undolevels = 1000
+opt.undoreload = 10000

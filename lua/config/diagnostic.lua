@@ -12,7 +12,7 @@ diagnostic.config {
 	virtual_lines = false, -- Disable virtual lines
 	signs = {
 		text = {
-			[diagnostic.severity.ERROR] = "❌", -- Icon for ERROR diagnostics
+			[diagnostic.severity.ERROR] = "xx", -- Icon for ERROR diagnostics
 			[diagnostic.severity.WARN]  = "⚠️", -- Icon for WARN diagnostics
 			[diagnostic.severity.INFO]  = "ℹ️", -- Icon for INFO diagnostics
 			[diagnostic.severity.HINT]  = "", -- Icon for HINT diagnostics
