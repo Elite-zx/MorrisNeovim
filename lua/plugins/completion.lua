@@ -122,21 +122,17 @@ return {
 						),
 						single_file_support = true,
 						cmd = {
-							"clangd",
-							"-j=12", -- 线程数，提高索引性能
-							"--enable-config", -- 允许 `.clangd` 配置文件
-							"--background-index", -- 启用后台索引
-							"--pch-storage=memory", -- 预编译头存储在内存
-							"--query-driver=" .. get_binary_path_list({ "clang++", "clang", "gcc", "g++" }), -- 指定编译器路径
-							"--clang-tidy", -- 启用 `clang-tidy`
-							"--all-scopes-completion", -- 全作用域补全
-							"--completion-style=detailed", -- 详细补全
-							"--header-insertion-decorators", -- 头文件插入优化
-							"--header-insertion=iwyu", -- "Include What You Use" 模式
-							"--limit-references=3000", -- 限制引用搜索结果
-							"--limit-results=350", -- 限制符号搜索结果
-							"--function-arg-placeholders", -- 补全时自动添加占位参数
-							"--fallback-style=llvm", -- 代码格式化风格
+							"/usr/bin/clangd",
+							"--clang-tidy",
+							"--all-scopes-completion",
+							"--header-insertion=iwyu",
+							"--completion-style=detailed",
+							"--pch-storage=disk",
+							"--log=error",
+							"--j=8",
+							"--pretty",
+							"--background-index=false",
+							"--enable-config",
 						},
 						on_attach = on_attach,
 						commands = {
@@ -225,7 +221,35 @@ return {
 					-- 1. fix variable/class/func spell error
 					-- 2. import missing #include
 					vim.keymap.set("n", "gq", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
+
+					-- ✅ CursorHold 自动显示 diagnostic 浮窗
 				end,
+			})
+			-- Function to check if a floating dialog exists and if not then check for diagnostics under the cursor
+			function OpenDiagnosticIfNoFloat()
+				for _, winid in pairs(vim.api.nvim_tabpage_list_wins(0)) do
+					if vim.api.nvim_win_get_config(winid).zindex then
+						return
+					end
+				end
+				vim.diagnostic.open_float(0, {
+					scope = "cursor",
+					focusable = false,
+					close_events = {
+						"CursorMoved",
+						"CursorMovedI",
+						"BufHidden",
+						"InsertCharPre",
+						"WinLeave",
+					},
+				})
+			end
+
+			vim.api.nvim_create_augroup("lsp_diagnostics_hold", { clear = true })
+			vim.api.nvim_create_autocmd({ "CursorHold" }, {
+				pattern = "*",
+				command = "lua OpenDiagnosticIfNoFloat()",
+				group = "lsp_diagnostics_hold",
 			})
 		end,
 	},
@@ -380,12 +404,12 @@ return {
 						["v"] = actions.jump_vsplit, -- Open location in vertical split
 						["s"] = actions.jump_split, -- Open location in horizontal split
 						["t"] = actions.jump_tab, -- Open in new tab
-						["<CR>"] = actions.jump, -- Jump to location
+						["<CR>"] = actions.jump,  -- Jump to location
 						["o"] = actions.jump,
 						["l"] = actions.open_fold,
 						["h"] = actions.close_fold,
 						["<leader>l"] = actions.enter_win("preview"), -- Focus preview window
-						["q"] = actions.close, -- Closes Glance window
+						["q"] = actions.close,      -- Closes Glance window
 						["Q"] = actions.close,
 						["<Esc>"] = actions.close,
 						["<C-q>"] = actions.quickfix, -- Send all locations to quickfix list
@@ -472,7 +496,7 @@ return {
 		opts = function()
 			vim.keymap.set("n", "<leader>w", function()
 				require("conform").format({ lsp_format = "fallback" }) -- 触发格式化
-				vim.cmd("write") -- 保存文件
+				vim.cmd("write")                           -- 保存文件
 			end, { desc = "Format and save buffer" })
 			return {
 				formatters_by_ft = {

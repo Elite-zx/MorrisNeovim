@@ -1,114 +1,165 @@
 -- ==========================
 -- Basic Settings
 -- ==========================
-local opt = vim.opt
-local cmd = vim.cmd
-local api = vim.api
-local global = vim.g
+local opt          = vim.opt
+local cmd          = vim.cmd
+local api          = vim.api
+local global       = vim.g
+local utils        = require("config.utils")
 
--- Line numbers
-opt.number = true -- Show absolute line number
-opt.relativenumber = true -- Show relative line number
-opt.cursorline = true -- Highlight the line with the cursor
+opt.splitbelow     = true
+opt.splitright     = true
+opt.splitkeep      = 'screen'
 
--- clipboard
--- Yank (y)	写入 + 寄存器 → OSC52 → 本地剪贴板
--- Paste (p)	从 + 寄存器直接读取内容（非 OSC52）
-local function paste()
-  return {
-    vim.fn.split(vim.fn.getreg(""), "\n"),
-    vim.fn.getregtype(""),
-  }
-end
-vim.o.clipboard = "unnamedplus"
-vim.g.clipboard = {
-  name = "OSC 52",
-  copy = {
-    ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
-    ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
-  },
-  paste = {
-    ["+"] = paste,
-    ["*"] = paste,
-  },
+-- Mapping delay and CursorHold trigger time
+opt.timeoutlen     = 500
+opt.updatetime     = 500
+
+-- Ignore certain files and directories when completing command line files
+opt.wildignore     = {
+	'*.o', '*.obj', '*.dylib', '*.bin', '*.dll', '*.exe',
+	'*/.git/*', '*/.svn/*', '*/__pycache__/*', '*/build/**',
+	'*.jpg', '*.png', '*.jpeg', '*.bmp', '*.gif', '*.tiff', '*.svg', '*.ico',
+	'*.pyc', '*.pkl',
+	'*.DS_Store',
+	'*.aux', '*.bbl', '*.blg', '*.brf', '*.fls', '*.fdb_latexmk', '*.synctex.gz', '*.xdv',
 }
+opt.wildignorecase = true
 
--- Syntax and colors
-cmd("syntax enable") -- Enable syntax highlighting
-opt.termguicolors = true -- Enable 24-bit color support
-opt.background = "dark" -- Set background to dark
-
--- Filetype plugin indent
-cmd("filetype plugin indent on") -- Automatically detect file types
-cmd("filetype on") -- Enable filetype detection
-
--- set language
-cmd("language en_US")
-
--- Encoding settings
-opt.encoding = "utf-8" -- Set internal encoding to utf-8
-opt.fileencodings = { "utf-8", "ucs-bom", "gb18030", "gbk", "gb2312", "cp936" } -- File encodings to try
 
 -- Indentation settings (for C++)
-opt.smarttab = true -- Enable smart tab behavior
-opt.shiftwidth = 4 -- Number of spaces to use for each indentation step
-opt.tabstop = 2 -- Number of spaces that a tab character counts for
--- opt.expandtab = true        -- Optionally convert tabs to spaces (commented out)
--- opt.list = true             -- Optionally show tabs and spaces as visible characters
+opt.smarttab   = true -- Enable smart tab behavior
+opt.shiftwidth = 4    -- Number of spaces to use for each indentation step
+opt.tabstop    = 2    -- Number of spaces that a tab character counts for
+
+-- Match brackets
+opt.matchpairs:append({ '<:>', '「:」', '『:』', '【:】', '“:”', '‘:’', '《:》' })
+
+-- Line numbers
+opt.number         = true  -- Show absolute line number
+opt.relativenumber = true  -- Show relative line number
+opt.cursorline     = true  -- Highlight the line with the cursor
+
+-- Search settings
+opt.ignorecase     = true  -- Ignore case in searches
+opt.smartcase      = true  -- Case-sensitive search when uppercase is used
+
+-- Encoding settings
+opt.fileencoding   = 'utf-8'
+opt.fileencodings  = { 'ucs-bom', 'utf-8', 'cp936', 'gb18030', 'big5', 'euc-jp', 'euc-kr', 'latin1' }
+
+-- Automatic line wrap and prefix characters
+opt.linebreak      = true
+opt.showbreak      = '↪'
+
+-- 14. 命令补全模式与滚动
+opt.wildmode       = 'list:longest'
+opt.scrolloff      = 3
+
+-- Turn on mouse support in normal mode, set mouse behavior and scroll step length
+opt.mouse          = 'n'
+opt.mousemodel     = 'popup'
+opt.mousescroll    = 'ver:1,hor:0'
+
+
+-- Allow buffer switching without saving
+opt.hidden      = true
+opt.autowrite   = true
+opt.autoread    = true
+
+opt.showmode    = false
+opt.fileformats = { 'unix', 'dos' }
+opt.confirm     = true
+opt.visualbell  = true
+opt.errorbells  = false
+opt.history     = 500
+opt.list        = true
+opt.listchars   = {
+	tab = '▸ ',
+	extends = '❯',
+	precedes = '❮',
+	nbsp = '␣',
+}
+
+-- persistent undo
+local undodir   = vim.fn.expand("~/.vim/undo")
+if vim.fn.isdirectory(undodir) == 0 then
+	vim.fn.mkdir(undodir, "p")
+end
+opt.undofile    = true
+opt.undodir     = undodir
+opt.undolevels  = 1000
+opt.undoreload  = 10000
+
+-- Automatic alignment indentation to the next shiftwidth multiple; allows virtual cursor to be used in block selection for easy alignment editing
+opt.shiftround  = true
+opt.virtualedit = 'block'
+
+
+-- 25. 真彩色与光标、符号栏
+opt.termguicolors = true
+opt.signcolumn    = "yes:1"
+opt.background    = "dark"     -- Set background to dark
+
+
+-- Remove == and commas from filename recognition characters
+opt.isfname:remove("==")
+opt.isfname:remove(",")
+
+-- Forbid automatic line wrapping, turn off the default ruler display of the status bar, and set the command display position to the status bar
+opt.wrap = false
+opt.ruler = false
+opt.showcmdloc = 'statusline'
 
 -- Working directory follows file's directory
 opt.autochdir = false -- Automatically change directory to the file's directory
 
--- Font settings (GUI version)
-opt.guifont = "Monaco 20" -- Set font for GUI versions of Vim
-
--- Allow buffer switching without saving
-opt.hidden = true -- Allow buffers to be hidden without saving
-
--- Virtual editing settings
-opt.virtualedit = "block" -- Allow the cursor to move beyond the last character
-
--- Mouse settings
-opt.mouse = "n" -- Disable mouse support
-opt.ttyfast = true -- Enable faster terminal communication
-
 -- Indentation settings
 opt.smartindent = true -- Enable smart indentation
 
--- Search settings
-opt.ignorecase = true -- Ignore case in searches
-opt.smartcase = true -- Case-sensitive search when uppercase is used
-
 -- Matching bracket settings
 opt.showmatch = true -- Show matching brackets/parentheses
-opt.showcmd = true -- Show (partial) command in the last line
+opt.showcmd = true   -- Show (partial) command in the last line
 
 -- Backspace behavior
 opt.backspace = "indent,eol,start" -- Allow backspace over indentation, end of line, and start of line
 
 -- Search highlighting
-opt.hlsearch = true -- Highlight search matches
+opt.hlsearch = true  -- Highlight search matches
 opt.incsearch = true -- Incremental search (matches are displayed gradually)
 
 -- Auto-indentation
-opt.ai = true -- Enable auto-indentation
-opt.si = true -- Enable smart indentation
+opt.ai = true      -- Enable auto-indentation
+opt.si = true      -- Enable smart indentation
 opt.cindent = true -- Enable C-style indentation
 
--- UI
-opt.signcolumn = "yes" -- always show sign column
-
--- ==========================
--- Window Splitting & Layout
--- ==========================
-opt.splitright = true -- Place vertical splits to the right
-opt.splitbelow = true -- Place horizontal splits below
-
--- ==========================
--- Mouse and Terminal Settings
--- ==========================
-opt.mouse = "a" -- Enable mouse support in all modes
 
 -- disable netrw at the very start of your init.lua
 global.loaded_netrw = 1
 global.loaded_netrwPlugin = 1
+
+-- clipboard
+-- Yank (y)	写入 + 寄存器 → OSC52 → 本地剪贴板
+-- Paste (p)	从 + 寄存器直接读取内容（非 OSC52）
+vim.o.clipboard = "unnamedplus"
+vim.g.clipboard = {
+	name = "OSC 52",
+	copy = {
+		["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+		["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+	},
+	paste = {
+		["+"] = utils.paste,
+		["*"] = utils.paste,
+	},
+}
+
+-- log
+opt.verbose = 15
+opt.verbosefile = vim.fn.stdpath('cache') .. '/nvim_verbose.log'
+
+-- If ripgrep exists in the system, use it as the default grep tool
+if vim.fn.executable('rg') == 1 then
+	opt.grepprg = 'rg --vimgrep --no-heading --smart-case'
+	opt.grepformat = '%f:%l:%c:%m'
+end

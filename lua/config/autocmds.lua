@@ -41,7 +41,7 @@ autocmd("TextYankPost", {
 	group = basic_auto_cmds,
 	pattern = "*",
 	callback = function()
-		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 200 })
+		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300 })
 	end,
 })
 
@@ -55,6 +55,19 @@ autocmd("CursorMoved", {
 		end
 	end,
 })
+
+autocmd("VimLeave", {
+	callback = function()
+		if vim.fn.has("nvim") == 1 then
+			vim.cmd("wshada")
+		else
+			vim.cmd("wviminfo!")
+		end
+	end,
+})
+
+
+
 
 -- =============================================
 -- plugins autocmds

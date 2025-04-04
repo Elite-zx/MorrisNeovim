@@ -43,4 +43,40 @@ return {
 		"karb94/neoscroll.nvim",
 		opts = {},
 	},
+	{
+		"folke/todo-comments.nvim",
+		dependencies = { "nvim-lua/plenary.nvim" },
+		keys = {
+			-- 只跳转到 ERROR 和 WARNING 标签
+			{
+				"]t",
+				function()
+					require("todo-comments").jump_next({ keywords = { "HACK", "FIXME", "WARNING", "TODO" } })
+				end,
+				desc = "Next ERROR/WARNING comment",
+			},
+			{
+				"[t",
+				function()
+					require("todo-comments").jump_prev({ keywords = { "HACK", "FIXME", "WARNING", "TODO" } })
+				end,
+				desc = "Previous ERROR/WARNING comment",
+			},
+		},
+		opts = {
+			signs = false, -- show icons in the signs column
+			keywords = {
+				FIX = {
+					icon = "",
+					color = "error",
+					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+				},
+				NOTE = { icon = " ", color = "hint" },
+				TODO = { icon = "", color = "info" },
+				HACK = { icon = "", color = "warning" },
+				WARN = { icon = "", color = "warning", alt = { "WARNING", "XXX" } },
+			},
+			merge_keywords = false, --  custom keywords only
+		},
+	}
 }
