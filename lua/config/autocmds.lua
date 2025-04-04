@@ -72,8 +72,6 @@ autocmd("VimLeave", {
 -- =============================================
 -- plugins autocmds
 -- =============================================
-local plugins_auto_cmds = vim.api.nvim_create_augroup("PluginsAutoCmds", { clear = true })
-
 -- ==============
 -- nvim-tree
 -- ==============

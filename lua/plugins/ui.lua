@@ -16,6 +16,7 @@ return {
 	{
 		"goolord/alpha-nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
+		event = "BufWinEnter",
 		opts = function()
 			local startify = require("alpha.themes.startify")
 			-- available: devicons, mini, default is mini

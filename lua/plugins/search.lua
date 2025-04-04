@@ -31,7 +31,7 @@ end
 return {
 	{
 		"nvim-telescope/telescope.nvim",
-		lazy = false,
+		lazy = true,
 		version = "*",
 		dependencies = {
 			"nvim-lua/plenary.nvim",
@@ -43,10 +43,10 @@ return {
 		},
 		keys = {
 			-- Find content with ripGrep among files under current directory
-			{ "<leader>fg", fuzzy_grep, desc = "fuzzy grep under cur dir" },
-			{ "<leader>fF", find_files_plus, desc = "Find file with specific dir" },
-			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file under cur dir" },
-			{ "<leader>fr", "<cmd>Telescope git_files<cr>", desc = "Find file under git repo" },
+			{ "<leader>fg", fuzzy_grep,                                desc = "fuzzy grep under cur dir" },
+			{ "<leader>fF", find_files_plus,                           desc = "Find file with specific dir" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>",           desc = "Find file under cur dir" },
+			{ "<leader>fr", "<cmd>Telescope git_files<cr>",            desc = "Find file under git repo" },
 			{ "<leader>fb", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find tags in the current buffer" },
 
 			-- tags

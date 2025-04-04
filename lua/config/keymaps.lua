@@ -1,6 +1,6 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
-local utils = require("config.utils")
+local utils = require("utils.editor")
 
 -- Use ';' instead of ':' to enter command mode (saves shift keypress)
 -- map({ "n", "x" }, ";", ":")

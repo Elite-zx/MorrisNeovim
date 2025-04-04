@@ -1,7 +1,7 @@
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
-		lazy = false,
+		lazy = true,
 		event = "BufReadPre",
 		build = ":TSUpdate",
 		dependencies = { "nvim-lua/plenary.nvim", "HiPhish/rainbow-delimiters.nvim" },

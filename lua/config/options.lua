@@ -4,7 +4,7 @@
 local opt          = vim.opt
 local global       = vim.g
 local fn           = vim.fn
-local utils        = require("config.utils")
+local editor       = require("utils.editor")
 
 -- window
 opt.splitbelow     = true
@@ -56,8 +56,8 @@ opt.backupskip     = "/tmp/*,$TMPDIR/*,$TMP/*,$TEMP/*,*/shm/*,/private/var/*,.va
 opt.shortmess      = "aoOTIcF"
 
 -- Line numbers
-opt.number         = true -- Show absolute line number
-opt.relativenumber = true -- Show relative line number
+opt.nu             = true -- Show absolute line number
+opt.rnu            = true -- Show relative line number
 opt.cursorline     = true -- Highlight the line with the cursor
 opt.ruler          = true
 
@@ -69,7 +69,7 @@ opt.smartcase      = true -- Case-sensitive search when uppercase is used
 opt.encoding       = "utf-8"
 
 -- line wrap
-opt.wrap           = false
+opt.wrap           = true
 opt.whichwrap      = "h,l,<,>,[,],~"
 opt.linebreak      = true
 opt.breakat        = [[\ \	;:,!?]]
@@ -99,12 +99,13 @@ opt.laststatus     = 3
 -- virtual
 opt.visualbell     = true
 
--- color
+-- ui
 opt.termguicolors  = true
 opt.signcolumn     = "yes:1"
 opt.background     = "dark" -- Set background to dark
 opt.redrawtime     = 1500
 opt.synmaxcol      = 2500
+opt.guifont        = 'Monaco NFM'
 
 -- file
 opt.autochdir      = false -- Automatically change directory to the file's directory
@@ -149,8 +150,8 @@ vim.g.clipboard    = {
 		["*"] = osc52.copy("*"),
 	},
 	paste = {
-		["+"] = utils.paste,
-		["*"] = utils.paste,
+		["+"] = editor.paste,
+		["*"] = editor.paste,
 	},
 }
 

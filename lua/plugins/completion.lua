@@ -9,36 +9,19 @@ local function on_attach(client, bufnr)
 	if client.server_capabilities.semanticTokensProvider then
 		client.server_capabilities.semanticTokensProvider = nil
 	end
-
 	-- 禁用 LSP 代码格式化（交给 conform.nvim 处理）
-	-- client.server_capabilities.documentFormattingProvider = false
-	-- client.server_capabilities.documentFormattingRangeProvider = false
-
-	-- 只格式化修改过的部分（lsp-format-modifications）
-	local augroup_id = vim.api.nvim_create_augroup("FormatModificationsDocumentFormattingGroup", { clear = false })
-	vim.api.nvim_clear_autocmds({ group = augroup_id, buffer = bufnr })
-	vim.api.nvim_create_autocmd("BufWritePre", {
-		group = augroup_id,
-		buffer = bufnr,
-		callback = function()
-			local lsp_format_modifications = require("lsp-format-modifications")
-			lsp_format_modifications.format_modifications(client, bufnr)
-		end,
-	})
+	client.server_capabilities.documentFormattingProvider = false
+	client.server_capabilities.documentFormattingRangeProvider = false
 end
 
 return {
-	-- Mason (LSP Manager)
-	{
-		"williamboman/mason.nvim",
-		lazy = false,
-		opts = {},
-	},
-
-	-- Mason-LSPConfig (Closes some gaps that exist between mason.nvim and lspconfig)
+	-- Mason-LSPConfig (closes some gaps that exist between mason.nvim and lspconfig)
 	{
 		"williamboman/mason-lspconfig.nvim",
-		dependencies = { "williamboman/mason.nvim" }, -- 依赖 Mason
+		dependencies = { {
+			"williamboman/mason.nvim",
+			opts = {},
+		} }, -- LSP Manager
 		opts = {
 			-- -- A list of servers to automatically install if they're not already installed. Example: { "rust_analyzer@nightly", "lua_ls" }
 			ensure_installed = { "clangd", "lua_ls", "pyright", "ts_ls" },
@@ -62,17 +45,6 @@ return {
 				-- note that custom handler overwrite default handler
 				-- which means default handler's logic is not work for lsp server with custom handler
 				clangd = function()
-					local function get_binary_path_list(binaries)
-						local path_list = {}
-						for _, binary in ipairs(binaries) do
-							local path = vim.fn.exepath(binary)
-							if path ~= "" then
-								table.insert(path_list, path)
-							end
-						end
-						return table.concat(path_list, ",")
-					end
-
 					local function switch_source_header_splitcmd(bufnr, splitcmd)
 						bufnr = require("lspconfig").util.validate_bufnr(bufnr)
 						local clangd_client = require("lspconfig").util.get_active_client_by_name(bufnr, "clangd")
@@ -194,7 +166,7 @@ return {
 		},
 	},
 
-	-- LSPConfig (Neovim LSP 客户端)
+	-- LSPConfig (Neovim LSP Client)
 	{
 		"neovim/nvim-lspconfig",
 		event = { "BufReadPre", "BufNewFile" }, -- 延迟加载 LSP
@@ -226,24 +198,6 @@ return {
 		end,
 	},
 
-	{
-		"hrsh7th/cmp-nvim-lsp",
-		dependencies = { "neovim/nvim-lspconfig" }, -- 依赖 LSPConfig
-	},
-
-	{
-		"L3MON4D3/LuaSnip",
-		build = "make install_jsregexp",
-		history = true,
-		update_events = "TextChanged,TextChangedI",
-		delete_check_events = "TextChanged,InsertLeave",
-		dependencies = { "rafamadriz/friendly-snippets" }, -- 代码片段集合
-		opts = function()
-			require("luasnip.loaders.from_lua").lazy_load()
-			require("luasnip.loaders.from_vscode").lazy_load()
-			require("luasnip.loaders.from_snipmate").lazy_load()
-		end,
-	},
 
 	{
 		"hrsh7th/nvim-cmp",
@@ -315,114 +269,36 @@ return {
 	},
 
 	{
-		"dnlhc/glance.nvim",
-		cmd = "Glance",
-		keys = {
-			{ "<leader>gd", "<CMD>Glance definitions<CR>" },
-			{ "<leader>gR", "<CMD>Glance references<CR>" },
-		},
-		config = function()
-			local glance = require("glance")
-			local actions = glance.actions
-
-			glance.setup({
-				height = 18, -- Height of the window
-				zindex = 45,
-
-				-- When enabled, adds virtual lines behind the preview window to maintain context in the parent window
-				-- Requires Neovim >= 0.10.0
-				preserve_win_context = true,
-
-				-- Controls whether the preview window is "embedded" within your parent window or floating
-				-- above all windows.
-				detached = function(winid)
-					-- Automatically detach when parent window width < 100 columns
-					return vim.api.nvim_win_get_width(winid) < 100
-				end,
-				-- Or use a fixed setting: detached = true,
-
-				preview_win_opts = { -- Configure preview window options
-					cursorline = true,
-					number = true,
-					wrap = true,
-				},
-
-				border = {
-					enable = false, -- Show window borders. Only horizontal borders allowed
-					top_char = "―",
-					bottom_char = "―",
-				},
-
-				list = {
-					position = "right", -- Position of the list window 'left'|'right'
-					width = 0.33, -- Width as percentage (0.1 to 0.5)
-				},
-
-				theme = {
-					enable = true, -- Generate colors based on current colorscheme
-					mode = "auto", -- 'brighten'|'darken'|'auto', 'auto' will set mode based on the brightness of your colorscheme
-				},
-
-				mappings = {
-					list = {
-						["j"] = actions.next, -- Next item
-						["k"] = actions.previous, -- Previous item
-						["<Down>"] = actions.next,
-						["<Up>"] = actions.previous,
-						["<Tab>"] = actions.next_location, -- Next location (skips groups, cycles)
-						["<S-Tab>"] = actions.previous_location, -- Previous location (skips groups, cycles)
-						["<C-u>"] = actions.preview_scroll_win(5), -- Scroll up the preview window
-						["<C-d>"] = actions.preview_scroll_win(-5), -- Scroll down the preview window
-						["v"] = actions.jump_vsplit, -- Open location in vertical split
-						["s"] = actions.jump_split, -- Open location in horizontal split
-						["t"] = actions.jump_tab, -- Open in new tab
-						["<CR>"] = actions.jump,  -- Jump to location
-						["o"] = actions.jump,
-						["l"] = actions.open_fold,
-						["h"] = actions.close_fold,
-						["<leader>l"] = actions.enter_win("preview"), -- Focus preview window
-						["q"] = actions.close,      -- Closes Glance window
-						["Q"] = actions.close,
-						["<Esc>"] = actions.close,
-						["<C-q>"] = actions.quickfix, -- Send all locations to quickfix list
-						-- ['<Esc>'] = false -- Disable a mapping
-					},
-
-					preview = {
-						["Q"] = actions.close,
-						["<Tab>"] = actions.next_location, -- Next location (skips groups, cycles)
-						["<S-Tab>"] = actions.previous_location, -- Previous location (skips groups, cycles)
-						["<leader>l"] = actions.enter_win("list"), -- Focus list window
-					},
-				},
-
-				hooks = {}, -- Described in Hooks section
-
-				folds = {
-					fold_closed = "",
-					fold_open = "",
-					folded = true, -- Automatically fold list on startup
-				},
-
-				indent_lines = {
-					enable = true, -- Show indent guidelines
-					icon = "│",
-				},
-
-				winbar = {
-					enable = true, -- Enable winbar for the preview (requires neovim-0.8+)
-				},
-				use_trouble_qf = false, -- Quickfix action will open trouble.nvim instead of built-in quickfix list
-			})
+		"L3MON4D3/LuaSnip",
+		build = "make install_jsregexp",
+		history = true,
+		update_events = "TextChanged,TextChangedI",
+		delete_check_events = "TextChanged,InsertLeave",
+		dependencies = { "rafamadriz/friendly-snippets" }, -- 代码片段集合
+		opts = function()
+			require("luasnip.loaders.from_lua").lazy_load()
+			require("luasnip.loaders.from_vscode").lazy_load()
+			require("luasnip.loaders.from_snipmate").lazy_load()
 		end,
 	},
 
-	-- LSP Signature (函数签名提示)
+	-- LSP Signature (function name prompt)
 	{
 		"ray-x/lsp_signature.nvim",
-		event = "VeryLazy", -- 在需要时加载
+		event = "VeryLazy",
 		opts = {},
 	},
+
+	{
+		"nvimdev/lspsaga.nvim",
+		lazy = true,
+		event = "LspAttach",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require('lspsaga').setup({})
+		end,
+	},
+
 	-- handle code error
 	{
 		"folke/trouble.nvim",
@@ -455,12 +331,6 @@ return {
 			},
 		},
 		opts = {},
-	},
-
-	-- format
-	{
-		"joechrisellis/lsp-format-modifications.nvim",
-		event = "LspAttach",
 	},
 
 	{
