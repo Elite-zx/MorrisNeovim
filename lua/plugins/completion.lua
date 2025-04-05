@@ -458,7 +458,7 @@ return {
 		end
 	},
 
-	-- handle code error
+	-- pretty list
 	{
 		"folke/trouble.nvim",
 		cmd = { "Trouble", "TroubleToggle", "TroubleRefresh" },
@@ -492,6 +492,7 @@ return {
 		opts = {},
 	},
 
+	-- code formatting
 	{
 		"stevearc/conform.nvim",
 		opts = function()
@@ -516,6 +517,7 @@ return {
 		end,
 	},
 
+	-- show lsp real-time status
 	{
 		"j-hui/fidget.nvim",
 		event = "VeryLazy",
