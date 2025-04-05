@@ -100,7 +100,7 @@ opt.laststatus     = 3
 opt.visualbell     = true
 
 -- ui
-opt.termguicolors  = true
+-- opt.termguicolors  = true // default
 opt.signcolumn     = "yes:1"
 opt.background     = "dark" -- Set background to dark
 opt.redrawtime     = 1500

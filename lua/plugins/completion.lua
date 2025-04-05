@@ -107,7 +107,7 @@ return {
 							"--pretty",
 							"--background-index=false",
 							"--enable-config",
-							"--compile-commands-dir=~/QQMail"
+							"--compile-commands-dir=/data/zenonzhang/QQMail"
 						},
 						on_attach = on_attach,
 						commands = {
@@ -173,7 +173,7 @@ return {
 	-- LSPConfig (Neovim LSP Client)
 	{
 		"neovim/nvim-lspconfig",
-		event = { "BufReadPre", "BufNewFile" }, -- 延迟加载 LSP
+		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "williamboman/mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
 		config = function()
 			-- This is where you enable features that only work
@@ -300,68 +300,17 @@ return {
 		event = "LspAttach",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		keys = {
-			{
-				"K", "<cmd>Lspsaga hover_doc<cr>", {
-				desc = "check symbol usage",
-				slient = true,
-			}
-			},
-			{
-				"gd", "<cmd>Lspsaga goto_definition<cr>", {
-				desc = "Goto definition",
-				slient = true,
-			}
-			},
-
-			{
-				"gD", "<cmd>Lspsaga peek_definition<cr>", {
-				desc = "peek definition",
-				slient = true,
-			}
-			},
-
-			{
-				-- If actions are available, a light bulb appears next to the error or warning
-				"ga", "<cmd>Lspsaga code_action<cr>", {
-				desc = "lsp: Code action for cursor",
-				slient = true,
-			},
-			},
-
-			{
-				"gci", "<cmd>Lspsaga incoming_calls<cr>", {
-				desc = "LSP: Show incoming calls",
-				slient = true,
-			}
-			},
-
-			{
-				"gco", "<cmd>Lspsaga outgoing_calls<cr>", {
-				desc = "lsp: Show outgoing calls",
-				slient = true,
-			}
-			},
-
-			{
-				"g]", "<cmd>Lspsaga diagnostic_jump_next<cr>", {
-				desc = "LSP: Prev diagnostic",
-				slient = true,
-			}
-			},
-
-			{
-				"g[", "<cmd>Lspsaga diagnostic_jump_prev<cr>", {
-				desc = "LSP: Prev diagnostic",
-				slient = true,
-			}
-			},
-
-			{
-				"<leader>lx", "<cmd>Lspsaga show_line_diagnostics ++unfocus<cr>", {
-				desc = "LSP: Line diagnostic",
-				slient = true,
-			}
-			},
+			{ "K",          "<cmd>Lspsaga hover_doc<cr>",                       desc = "Check symbol usage",           silent = true },
+			{ "gd",         "<cmd>Lspsaga goto_definition<cr>",                 desc = "Goto definition",              silent = true },
+			{ "gD",         "<cmd>Lspsaga peek_definition<cr>",                 desc = "Peek definition",              silent = true },
+			{ "ga",         "<cmd>Lspsaga code_action<cr>",                     desc = "LSP: Code action for cursor",  silent = true },
+			{ "gr",         "<cmd>Lspsaga rename<cr>",                          desc = "LSP: Rename in file range",    silent = true },
+			{ "gR",         "<cmd>Lspsaga rename ++project<cr>",                desc = "LSP: Rename in project range", silent = true },
+			{ "gci",        "<cmd>Lspsaga incoming_calls<cr>",                  desc = "LSP: Show incoming calls",     silent = true },
+			{ "gco",        "<cmd>Lspsaga outgoing_calls<cr>",                  desc = "LSP: Show outgoing calls",     silent = true },
+			{ "]g",         "<cmd>Lspsaga diagnostic_jump_next<cr>",            desc = "LSP: Next diagnostic",         silent = true },
+			{ "[g",         "<cmd>Lspsaga diagnostic_jump_prev<cr>",            desc = "LSP: Prev diagnostic",         silent = true },
+			{ "<leader>lx", "<cmd>Lspsaga show_line_diagnostics ++unfocus<cr>", desc = "LSP: Line diagnostic",         silent = true },
 		},
 		opts = {
 			-- Breadcrumbs: https://nvimdev.github.io/lspsaga/breadcrumbs/
@@ -420,6 +369,28 @@ return {
 					quit_in_show = { "q", "<Esc>" },
 				},
 			},
+			-- Rename: https://nvimdev.github.io/lspsaga/rename/
+			rename = {
+				in_select = false,
+				auto_save = false,
+				project_max_width = 0.5,
+				project_max_height = 0.5,
+				keys = {
+					quit = "<C-c>",
+					exec = "<CR>",
+					select = "x",
+				},
+			},
+			-- Beacon: https://nvimdev.github.io/lspsaga/misc/#beacon
+			beacon = {
+				enable = true,
+				frequency = 12,
+			},
+			scroll_preview = {
+				scroll_down = "<C-d>",
+				scroll_up = "<C-u>",
+			},
+			request_timeout = 3000,
 			ui = {
 				border = "single", -- Can be single, double, rounded, solid, shadow.
 				devicon = true,
@@ -471,8 +442,6 @@ return {
 					Value = { icons.kind.Value, "LspKindValue" },
 				},
 			},
-
-
 		},
 		config = function(_, opts)
 			require("lspsaga").setup(opts)
@@ -546,4 +515,12 @@ return {
 			}
 		end,
 	},
+
+	{
+		"j-hui/fidget.nvim",
+		event = "VeryLazy",
+		tag = "legacy",
+		opts = {},
+	},
+
 }
