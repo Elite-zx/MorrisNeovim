@@ -1,5 +1,3 @@
-local icons = {}
-
 local data = {
 	kind = {
 		Break = "󰙧",
@@ -222,6 +220,8 @@ local data = {
 	},
 }
 
+local icons = {}
+
 ---Get a specific icon set.
 ---@param category "kind"|"type"|"documents"|"git"|"ui"|"diagnostics"|"misc"|"cmp"|"dap"
 ---@param add_space? boolean @Add trailing whitespace after the icon.
@@ -236,5 +236,15 @@ function icons.get(category, add_space)
 		return data[category]
 	end
 end
+
+icons.kind        = icons.get("kind", true)
+icons.type        = icons.get("type", true)
+icons.documents   = icons.get("documents", true)
+icons.git         = icons.get("git", true)
+icons.ui          = icons.get("ui", true)
+icons.diagnostics = icons.get("diagnostics", true)
+icons.misc        = icons.get("misc", true)
+icons.cmp         = icons.get("cmp", true)
+icons.dap         = icons.get("dap", true)
 
 return icons

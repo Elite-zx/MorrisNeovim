@@ -6,7 +6,8 @@ return {
 		build = ":TSUpdate",
 		dependencies = { "nvim-lua/plenary.nvim", "HiPhish/rainbow-delimiters.nvim" },
 		opts = {
-			ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query" },
+			ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline","bash"
+			},
 			sync_install = false,                               -- Install parsers synchronously
 			highlight = {
 				enable = true, additional_vim_regex_highlighting = false }, -- Enable syntax highlighting

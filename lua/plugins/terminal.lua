@@ -13,7 +13,7 @@ return {
 			insert_mappings = false, -- Disable insert mode mappings
 			autochdir = false, -- Don't change terminal directory automatically
 			shade_terminals = true, -- Darker background in terminal
-			direction = "horizontal", -- Terminal split mode ("horizontal", "vertical", "float", "tab")
+			direction = "float", -- Terminal split mode ("horizontal", "vertical", "float", "tab")
 			close_on_exit = true, -- Close terminal on process exit
 			float_opts = {
 				border = "curved", -- Rounded border
@@ -21,7 +21,7 @@ return {
 			},
 		},
 
-		-- ✅ Use `config` only to apply terminal keymaps and fixes
+		-- Use `config` only to apply terminal keymaps and fixes
 		config = function(_, opts)
 			require("toggleterm").setup(opts) -- Load options
 
