@@ -128,12 +128,6 @@ opt.hlsearch       = true -- Highlight search matches
 opt.incsearch      = true -- Incremental search (matches are displayed gradually)
 opt.wrapscan       = true
 
-
--- disable netrw at the very start of your init.lua
-global.loaded_netrw       = 1
-global.loaded_netrwPlugin = 1
-
-
 -- session
 opt.sessionoptions = "buffers,curdir,folds,help,tabpages,winpos,winsize"
 opt.shada          = "!,'500,<50,@100,s10,h" -- shared data file

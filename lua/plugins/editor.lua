@@ -33,6 +33,10 @@ return {
 		},
 	},
 
-
+	-- smooth scroll
+	{
+		"karb94/neoscroll.nvim",
+		opts = {},
+	},
 
 }

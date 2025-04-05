@@ -26,7 +26,7 @@ return {
 			return startify.config
 		end,
 	},
-	-- nvim-lualine
+	-- statusline
 	{
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
@@ -49,8 +49,8 @@ return {
 				lualine_y = {},
 				lualine_z = {},
 			},
-		tabline = {},
-		extensions = {},
+			tabline = {},
+			extensions = {},
 		},
 	},
 
@@ -62,45 +62,25 @@ return {
 		opts = {},
 	},
 
+	-- https://github.com/nvim-neo-tree/neo-tree.nvim/blob/main/lua/neo-tree/defaults.lua
 	{
-		"karb94/neoscroll.nvim",
-		opts = {},
-	},
-
-	{
-		"folke/todo-comments.nvim",
-		dependencies = { "nvim-lua/plenary.nvim" },
+		"nvim-neo-tree/neo-tree.nvim",
+		lazy = false, -- neo-tree will lazily load itself
+		branch = "v3.x",
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"nvim-tree/nvim-web-devicons",
+			"MunifTanjim/nui.nvim",
+		},
 		keys = {
-			-- 只跳转到 ERROR 和 WARNING 标签
 			{
-				"]t",
-				function()
-					require("todo-comments").jump_next({ keywords = { "HACK", "FIXME", "WARNING", "TODO" } })
-				end,
-				desc = "Next ERROR/WARNING comment",
-			},
-			{
-				"[t",
-				function()
-					require("todo-comments").jump_prev({ keywords = { "HACK", "FIXME", "WARNING", "TODO" } })
-				end,
-				desc = "Previous ERROR/WARNING comment",
+				"|", "<cmd>Neotree show reveal<cr>", desc = "Open Neotree", silent = true
 			},
 		},
 		opts = {
-			signs = false, -- show icons in the signs column
-			keywords = {
-				FIX = {
-					icon = "",
-					color = "error",
-					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
-				},
-				NOTE = { icon = " ", color = "hint" },
-				TODO = { icon = "", color = "info" },
-				HACK = { icon = "", color = "warning" },
-				WARN = { icon = "", color = "warning", alt = { "WARNING", "XXX" } },
-			},
-			merge_keywords = false, --  custom keywords only
+			close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
+			mappings = {
+			}
 		},
 	},
 
@@ -145,5 +125,81 @@ return {
 			notify.setup(opts)
 			vim.notify = notify
 		end,
-	}
+	},
+
+	{
+		"folke/todo-comments.nvim",
+		lazy = true,
+		event = { "CursorHold", "CursorHoldI" },
+		dependencies = { "nvim-lua/plenary.nvim" },
+		keys = {
+			-- 只跳转到 ERROR 和 WARNING 标签
+			{
+				"]t",
+				function()
+					require("todo-comments").jump_next({ keywords = { "HACK", "FIXME", "WARNING", "TODO" } })
+				end,
+				desc = "Next ERROR/WARNING comment",
+			},
+			{
+				"[t",
+				function()
+					require("todo-comments").jump_prev({ keywords = { "HACK", "FIXME", "WARNING", "TODO" } })
+				end,
+				desc = "Previous ERROR/WARNING comment",
+			},
+		},
+		opts = {
+			signs = false, -- show icons in the signs column
+			keywords = {
+				FIX = {
+					icon = icons.ui.Bug,
+					color = "error",
+					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
+				},
+				TODO = { icon = icons.ui.Accepted, color = "info" },
+				-- HACK = { icon = icons.ui.Fire, color = "warning" },
+				WARN = { icon = icons.diagnostics.Warning, color = "warning", alt = { "WARNING", "XXX" } },
+				PERF = { icon = icons.ui.Perf, alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+				NOTE = { icon = icons.ui.Note, color = "hint", alt = {} },
+				TEST = { icon = icons.ui.Lock, color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+			},
+			gui_style = {
+				fg = "NONE",
+				bg = "BOLD",
+			},
+			merge_keywords = false, --  custom keywords only
+			highlight = {
+				multiline = false,
+				keyword = "wide", -- "fg", "bg", "wide", "wide_bg", "wide_fg" or empty.
+				after = "",
+				comments_only = true,
+				max_line_len = 500,
+				exclude = {
+					"alpha",
+					"bigfile",
+					"checkhealth",
+					"dap-repl",
+					"diff",
+					"help",
+					"log",
+					"notify",
+					"NvimTree",
+					"Outline",
+					"qf",
+					"TelescopePrompt",
+					"toggleterm",
+					"undotree",
+				},
+			},
+			colors = {
+				error = { "DiagnosticError", "ErrorMsg", "#DC2626" },
+				warning = { "DiagnosticWarn", "WarningMsg", "#FBBF24" },
+				info = { "DiagnosticInfo", "#2563EB" },
+				hint = { "DiagnosticHint", "#F5C2E7" },
+				default = { "Conditional", "#7C3AED" },
+			},
+
+		},
+	},
 }

@@ -1,3 +1,4 @@
+local cmd = vim.cmd
 local autocmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local basic_auto_cmds = vim.api.nvim_create_augroup("BasicAutoCmds", { clear = true })
@@ -17,25 +18,6 @@ autocmd({ "InsertEnter", "WinLeave" }, {
 	command = "set nocursorline",
 })
 
--- Automatically resize all split windows equally when Neovim window is resized
-autocmd("VimResized", {
-	group = basic_auto_cmds,
-	pattern = "*",
-	command = "wincmd =",
-})
-
--- Restore cursor to last known position when reopening a file
-autocmd("BufWinEnter", {
-	group = basic_auto_cmds,
-	pattern = "*",
-	callback = function()
-		local last_pos = vim.fn.line("'\"")
-		if last_pos > 0 and last_pos <= vim.fn.line("$") then
-			vim.cmd('silent! normal! g`"')
-		end
-	end,
-})
-
 -- Highlight text when yanked
 autocmd("TextYankPost", {
 	group = basic_auto_cmds,
@@ -45,12 +27,13 @@ autocmd("TextYankPost", {
 	end,
 })
 
+-- no highlight after search
 autocmd("CursorMoved", {
-	group = augroup("auto-hlsearch", { clear = true }),
+	group = basic_auto_cmds,
 	callback = function()
 		if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
 			vim.schedule(function()
-				vim.cmd("nohlsearch")
+				cmd("nohlsearch")
 			end)
 		end
 	end,
@@ -59,77 +42,31 @@ autocmd("CursorMoved", {
 autocmd("VimLeave", {
 	callback = function()
 		if vim.fn.has("nvim") == 1 then
-			vim.cmd("wshada")
+			cmd("wshada")
 		else
-			vim.cmd("wviminfo!")
+			cmd("wviminfo!")
 		end
 	end,
 })
-
-
 
 
 -- =============================================
 -- plugins autocmds
 -- =============================================
--- ==============
--- nvim-tree
--- ==============
-augroup("__nvim_tree__", { clear = true })
--- Close Neovim if NvimTree is the only window open
-autocmd("BufEnter", {
-	group = "__nvim_tree__",
-	callback = function()
-		local wins = vim.api.nvim_list_wins()
-		local buffers = vim.api.nvim_list_bufs()
-		if #wins == 1 and #buffers == 1 then
-			local bufname = vim.api.nvim_buf_get_name(0)
-			if bufname:match("NvimTree_") then
-				vim.cmd("quit")
-			end
-		end
-	end,
-})
-
--- Close tab if NvimTree is the only window left
-autocmd("BufEnter", {
-	group = "__nvim_tree__",
-	callback = function()
-		if #vim.api.nvim_list_wins() == 1 then
-			local bufname = vim.api.nvim_buf_get_name(0)
-			if bufname:match("NvimTree_") then
-				vim.cmd("quit")
-			end
-		end
-	end,
-})
 
 -- Open neovim with NvimTree opened
 autocmd("VimEnter", {
-	group = "__nvim_tree__",
 	callback = function()
-		require("nvim-tree.api").tree.open()
-		vim.cmd("wincmd p") -- Move cursor back to the previous window
-	end,
-})
-
--- Auto locate the current file in NvimTree
-autocmd("BufWinEnter", {
-	group = "__nvim_tree__",
-	callback = function()
-		local bufname = vim.api.nvim_buf_get_name(0)
-		if bufname ~= "" and not bufname:match("NvimTree_") then
-			require("nvim-tree.api").tree.find_file()
-		end
+		cmd("Neotree show reveal")
+		cmd("wincmd p") -- Move cursor back to the previous window
 	end,
 })
 
 -- Toggle alpha-nvim with tabnew
 autocmd("TabNewEntered", {
 	callback = function()
-		-- 仅在 buffer 为空时加载 alpha
 		if vim.fn.empty(vim.fn.expand("%")) == 1 then
-			require("alpha").start()
+			cmd("Alpha")
 		end
 	end,
 })
