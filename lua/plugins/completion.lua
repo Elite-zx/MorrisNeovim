@@ -97,16 +97,19 @@ return {
 						single_file_support = true,
 						cmd = {
 							"/usr/bin/clangd",
+							"--j=12",
+							"--enable-config",
+							"--background-index",
+							"--pch-storage=memory",
 							"--clang-tidy",
 							"--all-scopes-completion",
-							"--header-insertion=iwyu",
 							"--completion-style=detailed",
+							"--header-insertion-decorators",
+							"--header-insertion=iwyu",
+							"--limit-references=3000",
+							"--limit-results=350",
 							"--pch-storage=disk",
-							"--log=error",
-							"--j=8",
 							"--pretty",
-							"--background-index=false",
-							"--enable-config",
 							"--compile-commands-dir=/data/zenonzhang/QQMail"
 						},
 						on_attach = on_attach,
@@ -142,26 +145,23 @@ return {
 						capabilities = capabilities,
 						settings = {
 							Lua = {
-								runtime = {
-									-- Tell the language server which version of Lua you're using
-									-- (most likely LuaJIT in the case of Neovim)
-									version = "LuaJIT",
-								},
+								runtime = { version = "LuaJIT" },
 								diagnostics = {
-									-- Get the language server to recognize the `vim` global
-									globals = {
-										"vim",
-										"require",
-									},
+									globals = { "vim" },
+									disable = { "different-requires", "undefined-field" },
 								},
 								workspace = {
-									-- Make the server aware of Neovim runtime files
-									library = vim.api.nvim_get_runtime_file("", true),
+									library = {
+										vim.fn.expand("$VIMRUNTIME/lua"),
+										vim.fn.expand("$VIMRUNTIME/lua/vim/lsp"),
+									},
+									maxPreload = 100000,
+									preloadFileSize = 10000,
 								},
-								-- Do not send telemetry data containing a randomized but unique identifier
-								telemetry = {
-									enable = false,
-								},
+								hint = { enable = true, setType = true },
+								format = { enable = true },
+								telemetry = { enable = false },
+								semantic = { enable = false },
 							},
 						},
 					})

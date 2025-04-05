@@ -31,7 +31,26 @@ return {
 		"nvim-lualine/lualine.nvim",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		opts = {
-			options = { theme = "dracula-nvim" },
+			options = {
+				icons_enabled = true,
+				theme = "auto",
+				disabled_filetypes = { statusline = { "alpha" } },
+				component_separators = "",
+				section_separators = { left = "", right = "" },
+			},
+			sections = {
+				lualine_a = { "mode" },
+			},
+			inactive_sections = {
+				lualine_a = {},
+				lualine_b = {},
+				lualine_c = { "filename" },
+				lualine_x = { "location" },
+				lualine_y = {},
+				lualine_z = {},
+			},
+		tabline = {},
+		extensions = {},
 		},
 	},
 
@@ -100,7 +119,7 @@ return {
 			---@usage Function called when a window is closed
 			on_close = nil,
 			---@usage timeout for notifications in ms, default 5000
-			timeout = 1000,
+			timeout = 2000,
 			-- @usage User render fps value
 			fps = 20,
 			-- Render function for notifications. See notify-render()

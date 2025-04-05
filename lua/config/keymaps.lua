@@ -33,7 +33,7 @@ map("n", "<C-k>", "<C-W>k", opts) -- Move to the window above
 map("n", "<C-h>", "<C-W>h", opts) -- Move to the window on the left
 map("n", "<C-l>", "<C-W>l", opts) -- Move to the window on the right
 
--- Change text without writing to default register
+-- Change/Delete text without writing to default register
 map("n", "c", '"_c')
 map("n", "C", '"_C')
 map("n", "cc", '"_cc')
