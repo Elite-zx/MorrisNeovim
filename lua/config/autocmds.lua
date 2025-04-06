@@ -54,20 +54,11 @@ autocmd("VimLeave", {
 -- plugins autocmds
 -- =============================================
 
--- Open neovim with NvimTree opened
-autocmd("VimEnter", {
-	callback = function()
-		cmd("Neotree show reveal_force_cwd")
-		cmd("wincmd p") -- Move cursor back to the previous window
-	end,
-})
-
--- Toggle alpha-nvim with tabnew
+-- Toggle alpha-nvim and Neotree with tabnew
 autocmd("TabNewEntered", {
 	callback = function()
 		if vim.fn.empty(vim.fn.expand("%")) == 1 then
 			cmd("Alpha")
-			cmd("Neotree show reveal_force_cwd")
 		end
 	end,
 })

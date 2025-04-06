@@ -16,7 +16,7 @@ opt.winwidth       = 30
 
 -- Cursor
 opt.timeout        = true
-opt.timeoutlen     = 300 -- Mapping delay and
+opt.timeoutlen     = 1000 -- Mapping delay and
 opt.ttimeout       = true
 opt.ttimeoutlen    = 0
 opt.updatetime     = 200 --CursorHold trigger time

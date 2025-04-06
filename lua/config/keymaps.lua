@@ -47,7 +47,7 @@ map({ "n", "x" }, "L", "g_") -- Go to last non-blank character
 -- map("n", "/", [[/\v]])
 
 -- Change local working directory to current file's path and print it
-map("n", "<leader>cd", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change cwd" })
+-- map("n", "<leader>cd", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change cwd" })
 
 -- Delete current buffer without closing the window
 map("n", [[\d]], "<cmd>bprevious <bar> bdelete #<cr><cmd>echo 'Deleted current buffer.'<cr>", {
