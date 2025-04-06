@@ -34,18 +34,6 @@ return {
 		end,
 	},
 
-	{
-		"smoka7/hop.nvim",
-		version = "*",
-		event = { "CursorHold", "CursorHoldI" },
-		keys = {
-			{ "<leader><leader>f", "<cmd>HopWord<CR>", desc = "Go to any word in the current buffer" },
-		},
-		opts = {
-			keys = "etovxqpdygfblzhckisuran",
-		},
-	},
-
 	-- smooth scroll
 	{
 		"karb94/neoscroll.nvim",
@@ -127,12 +115,15 @@ return {
 		event = { "CursorHold", "CursorHoldI" },
 		keys = {
 			{ "<leader>ef", mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-			{ "F",          mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-			{ "r",          mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-			{ "R",          mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+			{ "<leader>eF", mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+			{ "<leader>er", mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+			{ "<leader>eR", mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
 			{ "<c-s>",      mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
 		},
 		opts = {
+			modes = {
+				search = { enabled = true },
+			},
 		},
 	}
 }
