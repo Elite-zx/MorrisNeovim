@@ -246,6 +246,5 @@ icons.diagnostics = icons.get("diagnostics", true)
 icons.misc        = icons.get("misc", true)
 icons.cmp         = icons.get("cmp", true)
 icons.dap         = icons.get("dap", true)
-icons.ui_sep      = icons.get("ui", true)
 
 return icons
