@@ -106,6 +106,8 @@ opt.background     = "dark" -- Set background to dark
 opt.redrawtime     = 1500
 opt.synmaxcol      = 2500
 opt.guifont        = 'Monaco NFM'
+opt.showtabline    = 2 -- always show tabline
+
 
 -- file
 opt.autochdir      = false -- Automatically change directory to the file's directory

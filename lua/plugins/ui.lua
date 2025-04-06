@@ -201,10 +201,9 @@ return {
 				lualine_a = { "mode" },
 				lualine_b = {
 					{
-						"filetype",
-						colored = true,
-						icon_only = false,
-						icon = { align = "left" },
+						"filename",
+						file_status = false,
+						path = 4,
 					},
 					components.file_status,
 				},
@@ -226,7 +225,6 @@ return {
 						cond = conditionals.has_git,
 						padding = { right = 1 },
 					},
-
 					{ utils.force_centering },
 					{
 						"diagnostics",
