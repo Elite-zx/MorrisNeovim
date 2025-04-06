@@ -46,19 +46,26 @@ return {
 					end
 				end, { desc = "git: Goto prev hunk" })
 
-				map('n', '<leader>gs', function()
-					gitsigns.stage_hunk()
-				end, { desc = "git: Toggle staging/unstaging of hunk" })
+				map('n', '<leader>gs',
+					"<cmd>Gitsigns stage_hunk<CR>",
+					{ desc = "git: Toggle staging/unstaging of hunk" })
 
 				map('v', '<leader>gs', function()
-					gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-				end, { desc = "git: Toggle staging/unstaging of selected hunk" })
+						gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end,
+					{ desc = "git: Toggle staging/unstaging of selected hunk" })
 
-				map('n', '<leader>gb',
+				map('n', '<leader>gS', "<cmd>Gitsigns stage_buffer<CR>", { desc = "git: Stage buffer" })
+
+				map('n', '<leader>gr', "<cmd>Gitsigns reset_hunk<CR>", { desc = "git: Reset hunk" })
+				map('v', '<leader>gr',
 					function()
-						gitsigns.blame_line({ full = true })
-					end, { desc = "git: Blame line" }
-				)
+						gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+					end
+					, { desc = "git: Reset hunk" })
+				map('n', '<leader>gb', function()
+					gitsigns.blame_line({ full = true })
+				end)
 				map({ 'o', 'x' }, 'ih', " <Cmd>Gitsigns select_hunk<CR> ", { desc = "git: select hunk" }
 				)
 			end

@@ -262,8 +262,10 @@ return {
 				lualine_y = {},
 				lualine_z = {},
 			},
-			tabline = {},
-			extensions = {},
+			tabline = {
+			},
+			extensions = { "quickfix", "neo-tree", "trouble" }, --clean lualine in neo-treeb
+
 		},
 	},
 
@@ -295,6 +297,10 @@ return {
 		},
 		opts = {
 			close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
+			window = {
+				position = "left",
+				width = 30,
+			},
 			filesystem = {
 				filtered_items = {
 					visible = true,
@@ -307,6 +313,7 @@ return {
 					leave_dirs_open = false,
 				},
 			},
+
 		},
 	},
 
