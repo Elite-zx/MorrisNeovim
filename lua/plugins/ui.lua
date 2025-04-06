@@ -77,7 +77,10 @@ return {
 		},
 		keys = {
 			{
-				"<leader>nn", "<cmd>Neotree toggle show reveal_force_cwd<cr>", desc = "Open Neotree", silent = true
+				"<leader>nn", "<cmd>Neotree toggle show reveal_force_cwd<cr>", desc = "Toggle Neotree", silent = true
+			},
+			{
+				"<leader>nf", "<cmd>Neotree show reveal_force_cwd<cr>", desc = "Locate current file on Neotree", silent = true
 			},
 		},
 		opts = {

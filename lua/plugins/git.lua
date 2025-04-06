@@ -59,9 +59,21 @@ return {
 						gitsigns.blame_line({ full = true })
 					end, { desc = "git: Blame line" }
 				)
-				map({'o','x'}, 'ih', " <Cmd>Gitsigns select_hunk<CR> ", { desc = "git: select hunk" }
+				map({ 'o', 'x' }, 'ih', " <Cmd>Gitsigns select_hunk<CR> ", { desc = "git: select hunk" }
 				)
 			end
 		},
+	},
+
+	{
+		"NeogitOrg/neogit",
+		dependencies = {
+			"nvim-lua/plenary.nvim", -- required
+			"sindrets/diffview.nvim", -- optional - Diff integration
+			"nvim-telescope/telescope.nvim", -- optional
+		},
+		config = true
 	}
+
+
 }

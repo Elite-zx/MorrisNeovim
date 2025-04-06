@@ -57,7 +57,7 @@ autocmd("VimLeave", {
 -- Open neovim with NvimTree opened
 autocmd("VimEnter", {
 	callback = function()
-		cmd("Neotree show reveal")
+		cmd("Neotree show reveal_force_cwd")
 		cmd("wincmd p") -- Move cursor back to the previous window
 	end,
 })
