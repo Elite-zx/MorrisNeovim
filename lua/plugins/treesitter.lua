@@ -1,18 +1,38 @@
+local settings = require("utils.settings")
+
 return {
 	{
 		"nvim-treesitter/nvim-treesitter",
 		lazy = true,
 		event = "BufReadPre",
 		build = ":TSUpdate",
-		dependencies = { "nvim-lua/plenary.nvim", "HiPhish/rainbow-delimiters.nvim" },
+		dependencies = {
+			"nvim-lua/plenary.nvim",
+			"HiPhish/rainbow-delimiters.nvim",
+			"nvim-treesitter/nvim-treesitter-textobjects"
+		},
 		opts = {
-			ensure_installed = { "c", "cpp", "lua", "vim", "vimdoc", "query", "markdown", "markdown_inline", "bash"
-			},
-			sync_install = false,                               -- Install parsers synchronously
+			ensure_installed = settings["treesitter_deps"],
+			sync_install = false, -- Install parsers synchronously
 			highlight = {
-				enable = true, additional_vim_regex_highlighting = false }, -- Enable syntax highlighting
-			indent = { enable = true },                         -- Enable indentation
+				enable = true,
+				additional_vim_regex_highlighting = false,
+			},                 -- Enable syntax highlighting
+			indent = { enable = true }, -- Enable indentation
+			matchup = { enable = true },
 			incremental_selection = { enable = true },
+			textobjects = {
+				select = {
+					enable = true,
+					lookahead = true,
+					keymaps = {
+						["af"] = "@function.outer",
+						["if"] = "@function.inner",
+						["ac"] = "@class.outer",
+						["ic"] = "@class.inner",
+					},
+				},
+			},
 		},
 		config = function(_, opts)
 			require("nvim-treesitter.configs").setup(opts)
