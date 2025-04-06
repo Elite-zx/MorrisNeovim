@@ -1,7 +1,10 @@
 -- ===============
 --  Better UI for neovim
 -- ===============
-local icons = require("utils.icons")
+local icons = {
+	diagnostics = require("utils.icons").get("diagnostics"),
+	ui = require("utils.icons").get("ui"),
+}
 
 return {
 	-- colorscheme
@@ -74,13 +77,23 @@ return {
 		},
 		keys = {
 			{
-				"|", "<cmd>Neotree show reveal<cr>", desc = "Open Neotree", silent = true
+				"<leader>nn", "<cmd>Neotree toggle show reveal_force_cwd<cr>", desc = "Open Neotree", silent = true
 			},
 		},
 		opts = {
 			close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
-			mappings = {
-			}
+			filesystem = {
+				filtered_items = {
+					visible = true,
+					show_hidden_count = true,
+					hide_dotfiles = true,
+					hide_gitignored = true,
+				},
+				follow_current_file = {
+					enabled = true,
+					leave_dirs_open = false,
+				},
+			},
 		},
 	},
 

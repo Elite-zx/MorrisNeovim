@@ -67,6 +67,7 @@ autocmd("TabNewEntered", {
 	callback = function()
 		if vim.fn.empty(vim.fn.expand("%")) == 1 then
 			cmd("Alpha")
+			cmd("Neotree show reveal_force_cwd")
 		end
 	end,
 })

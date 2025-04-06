@@ -308,8 +308,8 @@ return {
 			{ "gR",         "<cmd>Lspsaga rename ++project<cr>",                desc = "LSP: Rename in project range", silent = true },
 			{ "gci",        "<cmd>Lspsaga incoming_calls<cr>",                  desc = "LSP: Show incoming calls",     silent = true },
 			{ "gco",        "<cmd>Lspsaga outgoing_calls<cr>",                  desc = "LSP: Show outgoing calls",     silent = true },
-			{ "]g",         "<cmd>Lspsaga diagnostic_jump_next<cr>",            desc = "LSP: Next diagnostic",         silent = true },
-			{ "[g",         "<cmd>Lspsaga diagnostic_jump_prev<cr>",            desc = "LSP: Prev diagnostic",         silent = true },
+			{ "g]",         "<cmd>Lspsaga diagnostic_jump_next<cr>",            desc = "LSP: Next diagnostic",         silent = true },
+			{ "g[",         "<cmd>Lspsaga diagnostic_jump_prev<cr>",            desc = "LSP: Prev diagnostic",         silent = true },
 			{ "<leader>lx", "<cmd>Lspsaga show_line_diagnostics ++unfocus<cr>", desc = "LSP: Line diagnostic",         silent = true },
 		},
 		opts = {
