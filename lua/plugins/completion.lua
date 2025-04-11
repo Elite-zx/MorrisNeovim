@@ -100,7 +100,6 @@ return {
 							"--j=12",
 							"--enable-config",
 							"--background-index",
-							"--pch-storage=memory",
 							"--clang-tidy",
 							"--all-scopes-completion",
 							"--completion-style=detailed",
@@ -110,7 +109,8 @@ return {
 							"--limit-results=350",
 							"--pch-storage=disk",
 							"--pretty",
-							"--compile-commands-dir=/data/zenonzhang/QQMail"
+							"--inlay-hints",
+							"--compile-commands-dir=/data/zenonzhang/QQMail",
 						},
 						on_attach = on_attach,
 						commands = {
@@ -134,8 +134,12 @@ return {
 							},
 						},
 						-- gh: go to header
-						vim.keymap.set("n", "<leader>gh", "<cmd>ClangdSwitchSourceHeader<CR>",
-							{ desc = "go to class file header" }),
+						vim.keymap.set(
+							"n",
+							"gh",
+							"<cmd>ClangdSwitchSourceHeader<CR>",
+							{ desc = "go to class file header" }
+						),
 					})
 				end,
 
@@ -176,32 +180,20 @@ return {
 		event = { "BufReadPre", "BufNewFile" },
 		dependencies = { "williamboman/mason-lspconfig.nvim", "hrsh7th/cmp-nvim-lsp" },
 		config = function()
-			-- This is where you enable features that only work
-			-- if there is a language server active in the file
-			vim.api.nvim_create_autocmd("LspAttach", {
-				desc = "LSP actions",
-				callback = function(event)
-					local opts = { buffer = event.buf }
+			vim.lsp.set_log_level("ERROR")
 
-					-- vim.keymap.set("n", "K", "<cmd>lua vim.lsp.buf.hover()<cr>", opts)
-					-- vim.keymap.set("n", "gd", "<cmd>lua vim.lsp.buf.definition()<cr>", opts)
-					-- vim.keymap.set("n", "gD", "<cmd>lua vim.lsp.buf.declaration()<cr>", opts)
-					-- vim.keymap.set("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<cr>", opts)
-					-- vim.keymap.set("n", "go", "<cmd>lua vim.lsp.buf.type_definition()<cr>", opts)
-					-- vim.keymap.set("n", "gr", "<cmd>lua vim.lsp.buf.references()<cr>", opts)
-					-- --  automatically rename all references of variable/class/func,
-					-- vim.keymap.set("n", "gR", "<cmd>lua vim.lsp.buf.rename()<cr>", opts)
-					-- -- show parameter prompts
-					-- vim.keymap.set("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>", opts)
-					-- -- code action for quickfix:
-					-- -- 1. fix variable/class/func spell error
-					-- -- 2. import missing #include
-					-- vim.keymap.set("n", "gq", "<cmd>lua vim.lsp.buf.code_action()<cr>", opts)
-				end,
-			})
+			_G._toggle_inlayhint = function()
+				local is_enabled = vim.lsp.inlay_hint.is_enabled()
+				vim.lsp.inlay_hint.enable(not is_enabled)
+				vim.notify(
+					(is_enabled and "Inlay hint disabled successfully" or "Inlay hint enabled successfully"),
+					vim.log.levels.INFO,
+					{ title = "LSP Inlay Hint" }
+				)
+			end
+			vim.keymap.set("n", "<leader>lh", _G._toggle_inlayhint, { desc = "Toggle Inlay Hints" })
 		end,
 	},
-
 
 	{
 		"hrsh7th/nvim-cmp",
@@ -293,6 +285,7 @@ return {
 		opts = {},
 	},
 
+	-- FIXME:  show symbol reference
 	-- Better LSP UI
 	{
 		"nvimdev/lspsaga.nvim",
@@ -300,17 +293,72 @@ return {
 		event = "LspAttach",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		keys = {
-			{ "K",          "<cmd>Lspsaga hover_doc<cr>",                       desc = "Check symbol usage",           silent = true },
-			{ "gd",         "<cmd>Lspsaga goto_definition<cr>",                 desc = "Goto definition",              silent = true },
-			{ "gD",         "<cmd>Lspsaga peek_definition<cr>",                 desc = "Peek definition",              silent = true },
-			{ "ga",         "<cmd>Lspsaga code_action<cr>",                     desc = "LSP: Code action for cursor",  silent = true },
-			{ "gr",         "<cmd>Lspsaga rename<cr>",                          desc = "LSP: Rename in file range",    silent = true },
-			{ "gR",         "<cmd>Lspsaga rename ++project<cr>",                desc = "LSP: Rename in project range", silent = true },
-			{ "gci",        "<cmd>Lspsaga incoming_calls<cr>",                  desc = "LSP: Show incoming calls",     silent = true },
-			{ "gco",        "<cmd>Lspsaga outgoing_calls<cr>",                  desc = "LSP: Show outgoing calls",     silent = true },
-			{ "g]",         "<cmd>Lspsaga diagnostic_jump_next<cr>",            desc = "LSP: Next diagnostic",         silent = true },
-			{ "g[",         "<cmd>Lspsaga diagnostic_jump_prev<cr>",            desc = "LSP: Prev diagnostic",         silent = true },
-			{ "<leader>lx", "<cmd>Lspsaga show_line_diagnostics ++unfocus<cr>", desc = "LSP: Line diagnostic",         silent = true },
+			{
+				"K",
+				"<cmd>Lspsaga hover_doc<cr>",
+				desc = "Check symbol usage",
+				silent = true,
+			},
+			{
+				"gd",
+				"<cmd>Lspsaga goto_definition<cr>",
+				desc = "Goto definition",
+				silent = true,
+			},
+			{
+				"gD",
+				"<cmd>Lspsaga peek_definition<cr>",
+				desc = "Peek definition",
+				silent = true,
+			},
+			{
+				"ga",
+				"<cmd>Lspsaga code_action<cr>",
+				desc = "LSP: Code action for cursor",
+				silent = true,
+			},
+			{
+				"gr",
+				"<cmd>Lspsaga rename<cr>",
+				desc = "LSP: Rename in file range",
+				silent = true,
+			},
+			{
+				"gR",
+				"<cmd>Lspsaga rename ++project<cr>",
+				desc = "LSP: Rename in project range",
+				silent = true,
+			},
+			{
+				"gci",
+				"<cmd>Lspsaga incoming_calls<cr>",
+				desc = "LSP: Show incoming calls",
+				silent = true,
+			},
+			{
+				"gco",
+				"<cmd>Lspsaga outgoing_calls<cr>",
+				desc = "LSP: Show outgoing calls",
+				silent = true,
+			},
+			{
+				"g]",
+				"<cmd>Lspsaga diagnostic_jump_next<cr>",
+				desc = "LSP: Next diagnostic",
+				silent = true,
+			},
+			{
+				"g[",
+				"<cmd>Lspsaga diagnostic_jump_prev<cr>",
+				desc = "LSP: Prev diagnostic",
+				silent = true,
+			},
+			{
+				"<leader>lx",
+				"<cmd>Lspsaga show_line_diagnostics ++unfocus<cr>",
+				desc = "LSP: Line diagnostic",
+				silent = true,
+			},
 		},
 		opts = {
 			-- Breadcrumbs: https://nvimdev.github.io/lspsaga/breadcrumbs/
@@ -446,7 +494,7 @@ return {
 		config = function(_, opts)
 			require("lspsaga").setup(opts)
 			vim.diagnostic.config({
-				virtual_text = false
+				virtual_text = false,
 			})
 
 			-- vim.api.nvim_create_autocmd("CursorHold", {
@@ -455,7 +503,7 @@ return {
 			-- 		vim.cmd("Lspsaga show_line_diagnostics ++unfocus")
 			-- 	end,
 			-- })
-		end
+		end,
 	},
 
 	-- pretty list
@@ -496,23 +544,34 @@ return {
 	{
 		"stevearc/conform.nvim",
 		opts = function()
+			local diff_format = function()
+				local hunks = require("gitsigns").get_hunks()
+				local format = require("conform").format
+				for i = #hunks, 1, -1 do
+					local hunk = hunks[i]
+					if hunk ~= nil and hunk.type ~= "delete" then
+						local start = hunk.added.start
+						local last = start + hunk.added.count
+						-- nvim_buf_get_lines uses zero-based indexing -> subtract from last
+						local last_hunk_line = vim.api.nvim_buf_get_lines(0, last - 2, last - 1, true)[1]
+						local range = { start = { start, 0 }, ["end"] = { last - 1, last_hunk_line:len() } }
+						format({ range = range })
+					end
+				end
+			end
+
 			vim.keymap.set("n", "<leader>w", function()
 				require("conform").format({ lsp_format = "fallback" }) -- 触发格式化
-				vim.cmd("write")                           -- 保存文件
+				vim.cmd("write") -- 保存文件
 			end, { desc = "Format and save buffer" })
+			-- vim.keymap.set("n", "<leader>w", diff_format, { desc = "Format changed lines" })
+
 			return {
 				formatters_by_ft = {
 					lua = { "stylua" },
 					cpp = { "clang-format" },
 					c = { "clang-format" },
-					python = { "isort", "black" },
-					rust = { "rustfmt", lsp_format = "fallback" },
 				},
-
-				-- format_on_save = { -- These options will be passed to conform.format()
-				-- 	timeout_ms = 500,
-				-- 	lsp_format = "fallback",
-				-- },
 			}
 		end,
 	},
@@ -524,5 +583,4 @@ return {
 		tag = "legacy",
 		opts = {},
 	},
-
 }

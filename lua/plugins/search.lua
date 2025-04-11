@@ -15,21 +15,30 @@ local function fuzzy_grep()
 end
 
 local function fuzzy_grep_plus()
-	vim.ui.input({ prompt = "Grep files in directory: ", completion = "dir" }, function(dir)
+	local cwd = vim.fn.getcwd()
+	vim.ui.input({
+		prompt = "Grep files in directory (" .. cwd .. "): ",
+		completion = "dir",
+	}, function(dir)
 		-- 如果没有输入目录，则默认使用当前目录 "."
 		if not dir or dir == "" then
 			dir = "."
 		end
+
 		require("telescope.builtin").grep_string({
 			cwd = dir,
 			search = "",
-			only_sort_text = true
+			only_sort_text = true,
 		})
 	end)
 end
 
 local function find_files_plus()
-	vim.ui.input({ prompt = "Search files in directory: ", completion = "dir" }, function(dir)
+	local cwd = vim.fn.getcwd()
+	vim.ui.input({
+		prompt = "Search files in directory (" .. cwd .. "): ",
+		completion = "dir",
+	}, function(dir)
 		-- 如果没有输入目录，则默认使用当前目录 "."
 		if not dir or dir == "" then
 			dir = "."
@@ -57,14 +66,14 @@ return {
 		},
 		keys = {
 			-- Find content with ripGrep among files under current directory
-			{ "<leader>fr", fuzzy_grep,                                desc = "fuzzy grep under cur dir" },
-			{ "<leader>fR", fuzzy_grep_plus,                           desc = "fuzzy grep under specific dir" },
-			{ "<leader>ff", "<cmd>Telescope find_files<cr>",           desc = "Find file under cur dir" },
-			{ "<leader>fF", find_files_plus,                           desc = "Find file with specific dir" },
-			{ "<leader>fG", "<cmd>Telescope git_files<cr>",            desc = "Find file under git repo" },
+			{ "<leader>fg", fuzzy_grep, desc = "fuzzy grep under cur dir" },
+			{ "<leader>fG", fuzzy_grep_plus, desc = "fuzzy grep under specific dir" },
+			{ "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find file under cur dir" },
+			{ "<leader>fF", find_files_plus, desc = "Find file with specific dir" },
+			{ "<leader>fH", "<cmd>Telescope git_files<cr>", desc = "Find file under git repo (home)" },
 			{ "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find symbols in the current buffer" },
-			{ "<leader>fb", "<cmd>Telescope buffers<cr>",              desc = "find symbols in the current buffer" },
-			{ "<leader>fl", "<cmd>Telescope resume<cr>",               desc = "resume last search result" },
+			{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "find buffer files" },
+			{ "<leader>fl", "<cmd>Telescope resume<cr>", desc = "resume last search result" },
 			-- tags
 		},
 		opts = {

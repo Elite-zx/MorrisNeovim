@@ -21,7 +21,7 @@ return {
 			watch_gitdir = { follow_files = true },
 			current_line_blame_opts = { delay = 1000, virt_text = true, virtual_text_pos = "eol" },
 			on_attach = function(bufnr)
-				local gitsigns = require('gitsigns')
+				local gitsigns = require("gitsigns")
 				local function map(mode, l, r, opts)
 					opts = opts or {}
 					opts.buffer = bufnr
@@ -29,46 +29,45 @@ return {
 				end
 
 				-- ]g --> next_hunk
-				map('n', ']g', function()
+				map("n", "]g", function()
 					if vim.wo.diff then
-						vim.cmd.normal({ ']g', bang = true })
+						vim.cmd.normal({ "]g", bang = true })
 					else
-						gitsigns.nav_hunk('next')
+						gitsigns.nav_hunk("next")
 					end
 				end, { desc = "git: Goto next hunk" })
 
 				-- [g --> prev_hunk
-				map('n', '[g', function()
+				map("n", "[g", function()
 					if vim.wo.diff then
-						vim.cmd.normal({ '[g', bang = true })
+						vim.cmd.normal({ "[g", bang = true })
 					else
-						gitsigns.nav_hunk('prev')
+						gitsigns.nav_hunk("prev")
 					end
 				end, { desc = "git: Goto prev hunk" })
 
-				map('n', '<leader>gs',
+				map(
+					"n",
+					"<leader>gs",
 					"<cmd>Gitsigns stage_hunk<CR>",
-					{ desc = "git: Toggle staging/unstaging of hunk" })
+					{ desc = "git: Toggle staging/unstaging of hunk" }
+				)
 
-				map('v', '<leader>gs', function()
-						gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
-					end,
-					{ desc = "git: Toggle staging/unstaging of selected hunk" })
+				map("v", "<leader>gs", function()
+					gitsigns.stage_hunk({ vim.fn.line("."), vim.fn.line("v") })
+				end, { desc = "git: Toggle staging/unstaging of selected hunk" })
 
-				map('n', '<leader>gS', "<cmd>Gitsigns stage_buffer<CR>", { desc = "git: Stage buffer" })
+				map("n", "<leader>gS", "<cmd>Gitsigns stage_buffer<CR>", { desc = "git: Stage buffer" })
 
-				map('n', '<leader>gr', "<cmd>Gitsigns reset_hunk<CR>", { desc = "git: Reset hunk" })
-				map('v', '<leader>gr',
-					function()
-						gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
-					end
-					, { desc = "git: Reset hunk" })
-				map('n', '<leader>gb', function()
+				map("n", "<leader>gr", "<cmd>Gitsigns reset_hunk<CR>", { desc = "git: Reset hunk" })
+				map("v", "<leader>gr", function()
+					gitsigns.reset_hunk({ vim.fn.line("."), vim.fn.line("v") })
+				end, { desc = "git: Reset hunk" })
+				map("n", "<leader>gb", function()
 					gitsigns.blame_line({ full = true })
 				end)
-				map({ 'o', 'x' }, 'ih', " <Cmd>Gitsigns select_hunk<CR> ", { desc = "git: select hunk" }
-				)
-			end
+				map({ "o", "x" }, "ih", " <Cmd>Gitsigns select_hunk<CR> ", { desc = "git: select hunk" })
+			end,
 		},
 	},
 
@@ -81,6 +80,4 @@ return {
 	-- 	},
 	-- 	config = true
 	-- }
-
-
 }

@@ -30,7 +30,7 @@ return {
 				pattern = "term://*",
 				callback = function()
 					local keymap_opts = { buffer = 0 }
-					vim.keymap.set("t", "<C-c>", [[<C-\><C-n>]], keymap_opts)
+					vim.keymap.set("t", "<C-n>", [[<C-\><C-n>]], keymap_opts)
 					vim.keymap.set("t", "jk", [[<C-\><C-n>]], keymap_opts)
 					vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], keymap_opts)
 					vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], keymap_opts)

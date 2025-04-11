@@ -6,6 +6,7 @@ local icons = {
 	misc = require("utils.icons").get("misc"),
 	git = require("utils.icons").get("git", true),
 	cmp = require("utils.icons").get("cmp", true),
+	dap = require("utils.icons").get("dap", true),
 }
 
 vim.api.nvim_set_hl(
@@ -102,28 +103,60 @@ return {
 				{ "<leader>g", group = icons.git.Git .. "Git" },
 				{ "<leader>f", group = icons.ui.Telescope .. " Fuzzy Find" },
 				{ "<leader>n", group = icons.ui.FolderOpen .. " Neotree" },
+				{ "<leader>l", group = icons.ui.List .. " List" },
 				{ "<leader>t", group = icons.cmp.TabNine .. "Tabline" },
+				{ "<leader>e", group = icons.dap.StepOver .. "EasyMotion (flash)" },
 			},
-
-
 		},
 	},
+
+	-- FIXME:  label as search content error
 	-- navigate code faster
 	{
 		"folke/flash.nvim",
 		lazy = "VeryLazy",
 		event = { "CursorHold", "CursorHoldI" },
 		keys = {
-			{ "<leader>ef", mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
-			{ "<leader>eF", mode = { "n", "x", "o" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
-			{ "<leader>er", mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
-			{ "<leader>eR", mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-			{ "<c-s>",      mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
-		},
-		opts = {
-			modes = {
-				search = { enabled = true },
+			{
+				"<leader>ef",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").jump()
+				end,
+				desc = "Flash",
+			},
+			{
+				"<leader>eF",
+				mode = { "n", "x", "o" },
+				function()
+					require("flash").treesitter()
+				end,
+				desc = "Flash Treesitter",
+			},
+			{
+				"<leader>er",
+				mode = "o",
+				function()
+					require("flash").remote()
+				end,
+				desc = "Remote Flash",
+			},
+			{
+				"<leader>eR",
+				mode = { "o", "x" },
+				function()
+					require("flash").treesitter_search()
+				end,
+				desc = "Treesitter Search",
+			},
+			{
+				"<c-s>",
+				mode = { "c" },
+				function()
+					require("flash").toggle()
+				end,
+				desc = "Toggle Flash Search",
 			},
 		},
-	}
+	},
 }

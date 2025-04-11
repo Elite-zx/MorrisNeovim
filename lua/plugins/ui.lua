@@ -120,7 +120,6 @@ local components = {
 		cond = conditionals.has_enough_room,
 	},
 
-
 	tabwidth = {
 		function()
 			return icons.ui.Tab .. vim.bo.tabstop
@@ -262,10 +261,8 @@ return {
 				lualine_y = {},
 				lualine_z = {},
 			},
-			tabline = {
-			},
+			tabline = {},
 			extensions = { "quickfix", "neo-tree", "trouble" }, --clean lualine in neo-treeb
-
 		},
 	},
 
@@ -289,10 +286,16 @@ return {
 		},
 		keys = {
 			{
-				"<leader>nn", "<cmd>Neotree toggle show reveal_force_cwd<cr>", desc = "Toggle Neotree", silent = true
+				"<leader>nn",
+				"<cmd>Neotree toggle show reveal_force_cwd<cr>",
+				desc = "Toggle Neotree",
+				silent = true,
 			},
 			{
-				"<leader>nf", "<cmd>Neotree show reveal_force_cwd<cr>", desc = "Locate current file on Neotree", silent = true
+				"<leader>nf",
+				"<cmd>Neotree show reveal_force_cwd<cr>",
+				desc = "Locate current file on Neotree",
+				silent = true,
 			},
 		},
 		opts = {
@@ -313,7 +316,6 @@ return {
 					leave_dirs_open = false,
 				},
 			},
-
 		},
 	},
 
@@ -335,6 +337,7 @@ return {
 			timeout = 2000,
 			-- @usage User render fps value
 			fps = 20,
+			top_down = true,
 			-- Render function for notifications. See notify-render()
 			render = "default",
 			---@usage highlight behind the window for stages that change opacity
@@ -351,7 +354,6 @@ return {
 				DEBUG = icons.ui.Bug,
 				TRACE = icons.ui.Pencil,
 			},
-
 		},
 		config = function(_, opts)
 			local notify = require("notify")
@@ -391,7 +393,7 @@ return {
 					alt = { "FIXME", "BUG", "FIXIT", "ISSUE" },
 				},
 				TODO = { icon = icons.ui.Accepted, color = "info" },
-				-- HACK = { icon = icons.ui.Fire, color = "warning" },
+				HACK = { icon = icons.ui.Fire, color = "warning" },
 				WARN = { icon = icons.diagnostics.Warning, color = "warning", alt = { "WARNING", "XXX" } },
 				PERF = { icon = icons.ui.Perf, alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
 				NOTE = { icon = icons.ui.Note, color = "hint", alt = {} },
@@ -417,7 +419,7 @@ return {
 					"help",
 					"log",
 					"notify",
-					"NvimTree",
+					"NeoTree",
 					"Outline",
 					"qf",
 					"TelescopePrompt",
@@ -432,7 +434,6 @@ return {
 				hint = { "DiagnosticHint", "#F5C2E7" },
 				default = { "Conditional", "#7C3AED" },
 			},
-
 		},
 	},
 }

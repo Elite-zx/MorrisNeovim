@@ -21,11 +21,11 @@ map("n", "j", "gjzz", opts)
 map("v", "<", "<gv", opts)
 map("v", ">", ">gv", opts)
 -- Smart way to manage tabs
-map("n", "<leader>tn", ":tabnew<CR>", opts)   -- Open a new tab
-map("n", "<leader>to", ":tabonly<CR>", opts)  -- Close all other tabs except the current one
+map("n", "<leader>tn", ":tabnew<CR>", opts) -- Open a new tab
+map("n", "<leader>to", ":tabonly<CR>", opts) -- Close all other tabs except the current one
 map("n", "<leader>tc", ":tabclose<CR>", opts) -- Close the current tab
-map("n", "<leader>tm", ":tabmove ", opts)     -- Move the current tab (requires manual input for position)
-map("n", "<leader>tw", "<C-w>T", opts)        -- Move the current window to a new tab
+map("n", "<leader>tm", ":tabmove ", opts) -- Move the current tab (requires manual input for position)
+map("n", "<leader>tw", "<C-w>T", opts) -- Move the current window to a new tab
 
 -- Smart way to navigate between windows
 map("n", "<C-j>", "<C-W>j", opts) -- Move to the window below
@@ -40,14 +40,14 @@ map("n", "cc", '"_cc')
 map("x", "c", '"_c')
 
 -- Easier navigation to start/end of line
-map({ "n", "x" }, "H", "^")  -- Go to first non-blank character
+map({ "n", "x" }, "H", "^") -- Go to first non-blank character
 map({ "n", "x" }, "L", "g_") -- Go to last non-blank character
 
 -- Use very magic mode for all searches (less escaping)
 -- map("n", "/", [[/\v]])
 
 -- Change local working directory to current file's path and print it
--- map("n", "<leader>cd", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change cwd" })
+map("n", "<leader>cd", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change cwd" })
 
 -- Delete current buffer without closing the window
 map("n", [[\d]], "<cmd>bprevious <bar> bdelete #<cr><cmd>echo 'Deleted current buffer.'<cr>", {
@@ -57,8 +57,12 @@ map("n", [[\d]], "<cmd>bprevious <bar> bdelete #<cr><cmd>echo 'Deleted current b
 
 -- Normal mode: move current line
 -- NOTE: To make alt work, set Preferences > Profiles: left option key -> ESC+ in iterm2
-map("n", "<A-k>", function() utils.switch_line(vim.fn.line("."), "up") end)
-map("n", "<A-j>", function() utils.switch_line(vim.fn.line("."), "down") end)
+map("n", "<A-k>", function()
+	utils.switch_line(vim.fn.line("."), "up")
+end)
+map("n", "<A-j>", function()
+	utils.switch_line(vim.fn.line("."), "down")
+end)
 
 -- Replace visual selection with clipboard content without overwriting default register
 map("x", "p", '"_c<Esc>p')
@@ -94,7 +98,6 @@ map("n", [[\D]], function()
 end, {
 	desc = "delete other buffers",
 })
-
 
 -- Quickly open init.lua (your config file)
 map("n", "<leader>ev", "<cmd>tabnew $MYVIMRC <bar> tcd %:h<cr>", {
