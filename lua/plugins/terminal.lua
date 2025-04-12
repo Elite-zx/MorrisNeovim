@@ -7,7 +7,7 @@ return {
 		"akinsho/toggleterm.nvim",
 		version = "*",
 		opts = {
-			size = 10,       -- Terminal window size
+			size = 10, -- Terminal window size
 			open_mapping = [[<C-t>]], -- Shortcut key to toggle terminal
 			terminal_mappings = true, -- Enable terminal mappings
 			insert_mappings = false, -- Disable insert mode mappings
@@ -49,6 +49,5 @@ return {
 			vim.api.nvim_create_user_command("ZZ", SaveAndExit, {})
 			-- vim.api.nvim_set_keymap("c", "wqa", "Wqa", { noremap = true, silent = false })
 		end,
-	}
-
+	},
 }

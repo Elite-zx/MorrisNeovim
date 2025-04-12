@@ -237,14 +237,14 @@ function icons.get(category, add_space)
 	end
 end
 
-icons.kind        = icons.get("kind", true)
-icons.type        = icons.get("type", true)
-icons.documents   = icons.get("documents", true)
-icons.git         = icons.get("git", true)
-icons.ui          = icons.get("ui", true)
+icons.kind = icons.get("kind", true)
+icons.type = icons.get("type", true)
+icons.documents = icons.get("documents", true)
+icons.git = icons.get("git", true)
+icons.ui = icons.get("ui", true)
 icons.diagnostics = icons.get("diagnostics", true)
-icons.misc        = icons.get("misc", true)
-icons.cmp         = icons.get("cmp", true)
-icons.dap         = icons.get("dap", true)
+icons.misc = icons.get("misc", true)
+icons.cmp = icons.get("cmp", true)
+icons.dap = icons.get("dap", true)
 
 return icons

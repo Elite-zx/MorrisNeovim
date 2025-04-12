@@ -12,4 +12,4 @@ settings["treesitter_deps"] = {
 	"markdown_inline",
 }
 
-return settings;
+return settings

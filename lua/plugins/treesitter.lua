@@ -9,7 +9,7 @@ return {
 		dependencies = {
 			"nvim-lua/plenary.nvim",
 			"HiPhish/rainbow-delimiters.nvim",
-			"nvim-treesitter/nvim-treesitter-textobjects"
+			"nvim-treesitter/nvim-treesitter-textobjects",
 		},
 		opts = {
 			ensure_installed = settings["treesitter_deps"],
@@ -17,7 +17,7 @@ return {
 			highlight = {
 				enable = true,
 				additional_vim_regex_highlighting = false,
-			},                 -- Enable syntax highlighting
+			}, -- Enable syntax highlighting
 			indent = { enable = true }, -- Enable indentation
 			matchup = { enable = true },
 			incremental_selection = { enable = true },
