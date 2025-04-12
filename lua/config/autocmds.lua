@@ -18,15 +18,6 @@ autocmd({ "InsertEnter", "WinLeave" }, {
 	command = "set nocursorline",
 })
 
--- Highlight text when yanked
-autocmd("TextYankPost", {
-	group = basic_auto_cmds,
-	pattern = "*",
-	callback = function()
-		vim.highlight.on_yank({ higroup = "IncSearch", timeout = 300 })
-	end,
-})
-
 -- no highlight after search
 autocmd("CursorMoved", {
 	group = basic_auto_cmds,
@@ -49,7 +40,6 @@ autocmd("VimLeave", {
 	end,
 })
 
-
 -- =============================================
 -- plugins autocmds
 -- =============================================
@@ -62,4 +52,3 @@ autocmd("TabNewEntered", {
 		end
 	end,
 })
-

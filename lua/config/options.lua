@@ -134,23 +134,6 @@ opt.wrapscan = true
 opt.sessionoptions = "buffers,curdir,folds,help,tabpages,winpos,winsize"
 opt.shada = "!,'500,<50,@100,s10,h" -- shared data file
 
--- clipboard
--- Yank with OSC52
--- Paste with register
-local osc52 = require("vim.ui.clipboard.osc52")
-vim.o.clipboard = "unnamedplus"
-vim.g.clipboard = {
-	name = "OSC 52",
-	copy = {
-		["+"] = osc52.copy("+"),
-		["*"] = osc52.copy("*"),
-	},
-	paste = {
-		["+"] = editor.paste,
-		["*"] = editor.paste,
-	},
-}
-
 -- If ripgrep exists in the system, use it as the default grep tool
 if fn.executable("rg") == 1 then
 	opt.grepprg = "rg --hidden --vimgrep --smart-case --"
@@ -167,3 +150,21 @@ opt.undofile = true
 opt.undodir = undodir
 opt.undolevels = 1000
 opt.undoreload = 10000
+
+-- The following configuration is replaced by plugin smartyank.nvim
+-- clipboard
+-- Yank with OSC52
+-- Paste with register
+-- local osc52 = require("vim.ui.clipboard.osc52")
+-- vim.o.clipboard = "unnamedplus"
+-- vim.g.clipboard = {
+-- 	name = "OSC 52",
+-- 	copy = {
+-- 		["+"] = osc52.copy("+"),
+-- 		["*"] = osc52.copy("*"),
+-- 	},
+-- 	paste = {
+-- 		["+"] = editor.paste,
+-- 		["*"] = editor.paste,
+-- 	},
+-- }
