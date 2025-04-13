@@ -571,6 +571,7 @@ return {
 					lua = { "stylua" },
 					cpp = { "clang-format" },
 					c = { "clang-format" },
+					yaml = { "yamlfmt" },
 				},
 			}
 		end,

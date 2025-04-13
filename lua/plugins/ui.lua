@@ -174,30 +174,11 @@ return {
 	-- startup screen
 	{
 		"goolord/alpha-nvim",
-		dependencies = {
-			"nvim-tree/nvim-web-devicons",
-		},
 		config = function()
 			local alpha = require("alpha")
-			local dashboard = require("alpha.themes.startify")
-			dashboard.section.header.val = {
-				[[                                                                       ]],
-				[[                                                                       ]],
-				[[                                                                       ]],
-				[[                                                                       ]],
-				[[                                                                     ]],
-				[[       ████ ██████           █████      ██                     ]],
-				[[      ███████████             █████                             ]],
-				[[      █████████ ███████████████████ ███   ███████████   ]],
-				[[     █████████  ███    █████████████ █████ ██████████████   ]],
-				[[    █████████ ██████████ █████████ █████ █████ ████ █████   ]],
-				[[  ███████████ ███    ███ █████████ █████ █████ ████ █████  ]],
-				[[ ██████  █████████████████████ ████ █████ █████ ████ ██████ ]],
-				[[                                                                       ]],
-				[[                                                                       ]],
-				[[                                                                       ]],
-			}
-			alpha.setup(dashboard.opts)
+			local startify = require("alpha.themes.startify")
+			startify.section.header.val = require("utils.settings").startify_image
+			alpha.setup(startify.opts)
 		end,
 	},
 	-- statusline
