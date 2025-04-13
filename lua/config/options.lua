@@ -14,6 +14,23 @@ opt.previewheight = 12
 opt.winminwidth = 10
 opt.winwidth = 30
 
+-- clipboard
+-- Yank with OSC52
+-- Paste with register
+local osc52 = require("vim.ui.clipboard.osc52")
+vim.o.clipboard = "unnamedplus"
+vim.g.clipboard = {
+	name = "OSC 52",
+	copy = {
+		["+"] = osc52.copy("+"),
+		["*"] = osc52.copy("*"),
+	},
+	paste = {
+		["+"] = editor.paste,
+		["*"] = editor.paste,
+	},
+}
+
 -- Cursor
 opt.timeout = true
 opt.timeoutlen = 1000 -- Mapping delay and
@@ -150,21 +167,3 @@ opt.undofile = true
 opt.undodir = undodir
 opt.undolevels = 1000
 opt.undoreload = 10000
-
--- The following configuration is replaced by plugin smartyank.nvim
--- clipboard
--- Yank with OSC52
--- Paste with register
--- local osc52 = require("vim.ui.clipboard.osc52")
--- vim.o.clipboard = "unnamedplus"
--- vim.g.clipboard = {
--- 	name = "OSC 52",
--- 	copy = {
--- 		["+"] = osc52.copy("+"),
--- 		["*"] = osc52.copy("*"),
--- 	},
--- 	paste = {
--- 		["+"] = editor.paste,
--- 		["*"] = editor.paste,
--- 	},
--- }
