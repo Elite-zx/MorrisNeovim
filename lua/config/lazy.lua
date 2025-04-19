@@ -35,7 +35,7 @@ require("lazy").setup({
 	-- colorscheme that will be used when installing plugins.
 	install = { colorscheme = { "dracula" } },
 	-- automatically check for plugin updates
-	checker = { enabled = true },
+	checker = { enabled = false },
 	ui = {
 		-- a number <1 is a percentage., >1 is a fixed size
 		size = { width = 0.88, height = 0.8 },

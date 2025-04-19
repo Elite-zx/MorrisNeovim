@@ -77,7 +77,7 @@ return {
 
 					local capabilities = require("cmp_nvim_lsp").default_capabilities()
 					require("lspconfig").clangd.setup({
-						filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+						filetypes = { "c", "cpp", "objc", "objcpp", "cuda" },
 						root_dir = function(fname)
 							return require("lspconfig.util").root_pattern(
 								".clangd",
@@ -101,6 +101,7 @@ return {
 							"--enable-config",
 							"--background-index",
 							"--clang-tidy",
+							"--clang-tidy-checks=*",
 							"--all-scopes-completion",
 							"--completion-style=detailed",
 							"--header-insertion-decorators",

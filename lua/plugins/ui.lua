@@ -268,7 +268,9 @@ return {
 		main = "ibl",
 		lazy = true,
 		event = { "CursorHold", "CursorHoldI" },
-		opts = {},
+		opts = {
+			scope = { enabled = true, show_start = false, show_end = false },
+		},
 	},
 
 	-- https://github.com/nvim-neo-tree/neo-tree.nvim/blob/main/lua/neo-tree/defaults.lua
@@ -434,23 +436,19 @@ return {
 		},
 	},
 	{
-		"christoomey/vim-tmux-navigator",
-		lazy = true,
-		event = "BufReadPre",
-		cmd = {
-			"TmuxNavigateLeft",
-			"TmuxNavigateDown",
-			"TmuxNavigateUp",
-			"TmuxNavigateRight",
-			"TmuxNavigatePrevious",
-			"TmuxNavigatorProcessList",
-		},
-		keys = {
-			{ "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>", desc = "Navigate left in Tmux" },
-			{ "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>", desc = "Navigate down in Tmux" },
-			{ "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>", desc = "Navigate up in Tmux" },
-			{ "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>", desc = "Navigate right in Tmux" },
-			{ "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>", desc = "Navigate to previous Tmux pane" },
-		},
+		"alexghergh/nvim-tmux-navigation",
+		config = function()
+			require("nvim-tmux-navigation").setup({
+				disable_when_zoomed = true, -- defaults to false
+				keybindings = {
+					left = "<C-h>",
+					down = "<C-j>",
+					up = "<C-k>",
+					right = "<C-l>",
+					last_active = "<C-\\>",
+					next = "<C-Space>",
+				},
+			})
+		end,
 	},
 }

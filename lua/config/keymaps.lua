@@ -56,15 +56,6 @@ map("n", [[\d]], "<cmd>bprevious <bar> bdelete #<cr><cmd>echo 'Deleted current b
 	desc = "delete current buffer",
 })
 
--- Normal mode: move current line
--- NOTE: To make alt work, set Preferences > Profiles: left option key -> ESC+ in iterm2
-map("n", "<A-k>", function()
-	utils.switch_line(vim.fn.line("."), "up")
-end)
-map("n", "<A-j>", function()
-	utils.switch_line(vim.fn.line("."), "down")
-end)
-
 -- Replace visual selection with clipboard content without overwriting default register
 map("x", "p", '"_c<Esc>p')
 

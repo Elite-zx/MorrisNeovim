@@ -84,7 +84,7 @@ opt.smartcase = true -- Case-sensitive search when uppercase is used
 
 -- Encoding settings
 opt.encoding = "utf-8"
-vim.o.fileencodings = "utf-8,gbk" -- 自动识别编码
+opt.fileencodings = { "utf-8", "gbk" }
 
 -- line wrap
 opt.wrap = true
@@ -123,7 +123,6 @@ opt.signcolumn = "yes:1"
 opt.background = "dark" -- Set background to dark
 opt.redrawtime = 1500
 opt.synmaxcol = 2500
-opt.guifont = "Monaco NFM"
 opt.showtabline = 2 -- always show tabline
 
 -- file
