@@ -451,4 +451,18 @@ return {
 			})
 		end,
 	},
+
+	-- focus mode
+	{
+		"folke/zen-mode.nvim",
+		keys = {
+			{
+				"<leader>zm",
+				"<cmd>ZenMode<cr>",
+				desc = "Toggle ZenMode",
+				silent = true,
+			},
+		},
+		opts = {},
+	},
 }

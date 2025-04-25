@@ -561,11 +561,17 @@ return {
 				end
 			end
 
+			-- format the file and write
 			vim.keymap.set("n", "<leader>w", function()
 				require("conform").format({ lsp_format = "fallback" }) -- 触发格式化
-				vim.cmd("write") -- 保存文件
+				vim.cmd("write")
 			end, { desc = "Format and save buffer" })
-			-- vim.keymap.set("n", "<leader>w", diff_format, { desc = "Format changed lines" })
+
+			-- format git hunks and write
+			vim.keymap.set("n", "<leader>gw", function()
+				diff_format()
+				vim.cmd("write")
+			end, { desc = "Format changed lines and save buffer" })
 
 			return {
 				formatters_by_ft = {

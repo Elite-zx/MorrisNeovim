@@ -2,6 +2,8 @@
 -- Search everying in neovim
 -- ==============================
 
+local ui = require("utils.icons").ui
+
 local ok_actions, actions = pcall(require, "telescope.actions")
 if not ok_actions then
 	actions = {
@@ -74,24 +76,32 @@ return {
 			{ "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", desc = "find symbols in the current buffer" },
 			{ "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "find buffer files" },
 			{ "<leader>fl", "<cmd>Telescope resume<cr>", desc = "resume last search result" },
-			-- tags
 		},
 		opts = {
-
 			defaults = {
 				mappings = {
 					i = { -- insert mode
 						["<C-h>"] = "which_key",
-						-- hitting escape enter: exiting instead entering a normal-like mode
-						-- ["<esc>"] = require("telescope.actions").close,
-
-						-- ["<C-j>"] = require("telescope.actions").move_selection_next,
-						-- ["<C-k>"] = require("telescope.actions").move_selection_previous,
 					},
 				},
-				-- searching window layout
-				-- swaps between horizontal and vertical strategies based on the window width
+				prompt_prefix = " " .. ui.Telescope .. " ",
+				selection_caret = ui.ChevronRight,
+				scroll_strategy = "limit",
+				results_title = false,
 				layout_strategy = "flex",
+				path_display = { "absolute" },
+				file_ignore_patterns = {
+					".git/",
+					".cache",
+					"build/",
+					"%.class",
+					"%.pdf",
+					"%.mkv",
+					"%.mp4",
+					"%.zip",
+					"arch2_group_backup_svn_code/",
+				},
+
 				layout_config = {
 					horizontal = {
 						prompt_position = "bottom",
@@ -99,11 +109,16 @@ return {
 						preview_width = 0.5, -- 在 horizontal 模式下，预览窗口占比
 						preview_cutoff = 40, -- 小窗口时隐藏预览
 					},
+					vertical = {
+						mirror = false,
+					},
+					width = 0.85,
+					height = 0.92,
+					preview_cutoff = 120,
 				},
 				vimgrep_arguments = {
 					-- default value
 					"rg",
-					"--color=never",
 					"--no-heading",
 					"--with-filename",
 					"--line-number",
@@ -113,37 +128,25 @@ return {
 					"--trim", -- ripgrep remove indentation
 				},
 			},
-			pickers = {
-				find_files = {
-					mappings = {
-						n = { -- normal mode
-							-- worked when option autochdir is false
-							["cd"] = function(prompt_bufnr)
-								local selection = require("telescope.actions.state").get_selected_entry()
-								local dir = vim.fn.fnamemodify(selection.path, ":p:h")
-								actions.close(prompt_bufnr)
-								-- change
-								-- 1. cd: global
-								-- 2. lcd: current window
-								-- 3. tcd :current tab
-								-- working dir to selected file
-								vim.cmd(string.format("silent lcd %s", dir))
-							end,
-						},
-					},
-				},
-				live_grep = {
-					mappings = {
-						i = { ["<c-f>"] = actions.to_fuzzy_refine }, -- switch live_grep to fuzzy mode
-					},
+			extensions = {
+				fzf = {
+					fuzzy = true,
+					override_generic_sorter = true,
+					override_file_sorter = true,
+					case_mode = "smart_case",
 				},
 			},
-			extensions = {},
 		},
 		config = function(_, opts)
 			local ts = require("telescope")
 			ts.setup(opts)
 			ts.load_extension("fzf") -- :h telescope-fzf-native
 		end,
+	},
+
+	{
+		"ibhagwan/fzf-lua",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {},
 	},
 }
