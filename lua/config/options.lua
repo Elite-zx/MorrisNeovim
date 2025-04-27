@@ -119,6 +119,8 @@ opt.visualbell = true
 
 -- ui
 -- opt.termguicolors  = true // default
+opt.shell = "zsh"
+opt.shellcmdflag = "-ic"
 opt.signcolumn = "yes:1"
 opt.background = "dark" -- Set background to dark
 opt.redrawtime = 1500
