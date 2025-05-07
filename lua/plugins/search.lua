@@ -87,6 +87,10 @@ return {
 				["--border"] = "none",
 				["--highlight-line"] = true,
 			},
+			hls = {
+				normal = "Normal",
+				preview_normal = "Normal",
+			},
 			files = {
 				hidden = false,
 				find_opts = [[-type f \! -path '*/.git/*' \! -path '*/arch2_group_backup_svn_code/*']],
