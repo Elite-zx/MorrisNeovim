@@ -4,7 +4,7 @@
 
 local ui = require("utils.icons").ui
 
-local function fuzzy_grep_plus()
+local function fuzzy_grep_search(search_fn)
 	local cwd = vim.fn.getcwd()
 	vim.ui.input({
 		prompt = "Grep files in directory (" .. cwd .. "): ",
@@ -15,9 +15,8 @@ local function fuzzy_grep_plus()
 			dir = "."
 		end
 
-		require("fzf-lua").live_grep({
-			cwd = dir,
-		})
+		-- 调用传入的搜索函数
+		search_fn({ cwd = dir })
 	end)
 end
 
@@ -48,10 +47,32 @@ return {
 			{ "<leader>fF", find_files_plus, desc = "Find file with specific dir" },
 			{ "<leader>fH", "<cmd>FzfLua git_files<cr>", desc = "Find file under git repo (home)" },
 
-			{ "<leader>fgg", "<cmd>FzfLua live_grep<cr>", desc = "search for a pattern with `grep` or `rg`" },
-			{ "<leader>fgG", fuzzy_grep_plus, desc = "search for a pattern with `grep` or `rg`" },
-			{ "<leader>fgc", "<cmd>FzfLua grep_cword<cr>", desc = "search word under cursor" },
-			{ "<leader>fgv", "<cmd>FzfLua grep_visual<cr>", desc = "search visual selection" },
+			{ "<leader>fg", "<cmd>FzfLua grep<cr><cr>", desc = "search for a pattern with rg" },
+			{ "<leader>fw", "<cmd>FzfLua grep_cword<cr>", desc = "search word under cursor" },
+			{ "<leader>fv", "<cmd>FzfLua grep_visual<cr>", desc = "search visual selection", mode = "v" },
+			{
+				"<leader>fG",
+				function()
+					fuzzy_grep_search(require("fzf-lua").grep)
+				end,
+				desc = "search for a pattern with `grep` or `rg` plus",
+			},
+			{
+				"<leader>fC",
+				function()
+					fuzzy_grep_search(require("fzf-lua").grep_cword)
+				end,
+				desc = "search word under cursor plus",
+			},
+			{
+				"<leader>fV",
+				function()
+					fuzzy_grep_search(require("fzf-lua").grep_visual)
+				end,
+
+				desc = "search visual selection plus",
+				mode = "v",
+			},
 
 			{ "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "find buffer files" },
 			{ "<leader>fs", "<cmd>FzfLua treesitter<cr>", desc = "current buffer treesitter symbols" },
@@ -66,7 +87,20 @@ return {
 				["--border"] = "none",
 				["--highlight-line"] = true,
 			},
-			keymap = {},
+			files = {
+				hidden = false,
+				find_opts = [[-type f \! -path '*/.git/*' \! -path '*/arch2_group_backup_svn_code/*']],
+				rg_opts = [[--color=never --hidden --files -g "!.git" -g "!arch2_group_backup_svn_code"]],
+				fd_opts = [[--color=never --type f --hidden --follow --exclude .git --ignore-file ]]
+					.. vim.fn.expand("$HOME/.config/nvim/nvim-ignore"),
+			},
+
+			git = {
+				files = {
+					git_icons = false,
+					cmd = "git ls-files --exclude-standard",
+				},
+			},
 		},
 	},
 }

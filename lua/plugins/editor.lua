@@ -3,6 +3,7 @@
 -- ==============================
 local icons = {
 	ui = require("utils.icons").get("ui"),
+	documents = require("utils.icons").get("documents"),
 	misc = require("utils.icons").get("misc"),
 	git = require("utils.icons").get("git", true),
 	cmp = require("utils.icons").get("cmp", true),
@@ -101,7 +102,7 @@ return {
 
 			spec = {
 				{ "<leader>g", group = icons.git.Git .. "Git" },
-				{ "<leader>f", group = icons.ui.Telescope .. " Fuzzy Find" },
+				{ "<leader>f", group = icons.documents.FileFind .. " Fuzzy Find" },
 				{ "<leader>n", group = icons.ui.FolderOpen .. " Neotree" },
 				{ "<leader>l", group = icons.ui.List .. " List" },
 				{ "<leader>t", group = icons.cmp.TabNine .. "Tabline" },
