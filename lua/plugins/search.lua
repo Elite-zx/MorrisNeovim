@@ -40,6 +40,7 @@ end
 return {
 	{
 		"ibhagwan/fzf-lua",
+		event = "BufReadPre",
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		keys = {
 			-- Find content with ripGrep among files under current directory
@@ -50,6 +51,9 @@ return {
 			{ "<leader>fg", "<cmd>FzfLua grep<cr><cr>", desc = "search for a pattern with rg" },
 			{ "<leader>fw", "<cmd>FzfLua grep_cword<cr>", desc = "search word under cursor" },
 			{ "<leader>fv", "<cmd>FzfLua grep_visual<cr>", desc = "search visual selection", mode = "v" },
+			{ "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "find buffer files" },
+			{ "<leader>fs", "<cmd>FzfLua treesitter<cr>", desc = "current buffer treesitter symbols" },
+			{ "<leader>fl", "<cmd>FzfLua resume<cr>", desc = "resume last search result" },
 			{
 				"<leader>fG",
 				function()
@@ -73,10 +77,6 @@ return {
 				desc = "search visual selection plus",
 				mode = "v",
 			},
-
-			{ "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "find buffer files" },
-			{ "<leader>fs", "<cmd>FzfLua treesitter<cr>", desc = "current buffer treesitter symbols" },
-			{ "<leader>fl", "<cmd>FzfLua resume<cr>", desc = "resume last search result" },
 		},
 		opts = {
 			fzf_opts = {
@@ -99,6 +99,15 @@ return {
 				files = {
 					git_icons = false,
 					cmd = "git ls-files --exclude-standard",
+				},
+			},
+			keymap = {
+				builtin = {
+					["?"] = "toggle-help",
+				},
+				fzf = {
+					["ctrl-j"] = "down",
+					["ctrl-k"] = "up",
 				},
 			},
 		},
