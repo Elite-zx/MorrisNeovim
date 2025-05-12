@@ -27,12 +27,11 @@ map("n", "<leader>tc", ":tabclose<CR>", opts) -- Close the current tab
 map("n", "<leader>tm", ":tabmove ", opts) -- Move the current tab (requires manual input for position)
 map("n", "<leader>tw", "<C-w>T", opts) -- Move the current window to a new tab
 
--- Comment since tchristoomey/vim-tmux-navigator
 -- Smart way to navigate between windows
--- map("n", "<C-j>", "<C-W>j", opts) -- Move to the window below
--- map("n", "<C-k>", "<C-W>k", opts) -- Move to the window above
--- map("n", "<C-h>", "<C-W>h", opts) -- Move to the window on the left
--- map("n", "<C-l>", "<C-W>l", opts) -- Move to the window on the right
+map("n", "<C-j>", "<C-W>j", opts) -- Move to the window below
+map("n", "<C-k>", "<C-W>k", opts) -- Move to the window above
+map("n", "<C-h>", "<C-W>h", opts) -- Move to the window on the left
+map("n", "<C-l>", "<C-W>l", opts) -- Move to the window on the right
 
 -- Change/Delete text without writing to default register
 map("n", "c", '"_c')

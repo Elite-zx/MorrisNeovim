@@ -87,6 +87,11 @@ return {
 				["--border"] = "none",
 				["--highlight-line"] = true,
 			},
+			winopts = {
+				preview = {
+					layout = "vertical", -- horizontal|vertical|flex
+				},
+			},
 			files = {
 				hidden = false,
 				find_opts = [[-type f \! -path '*/.git/*' \! -path '*/arch2_group_backup_svn_code/*']],
