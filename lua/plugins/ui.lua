@@ -237,6 +237,13 @@ return {
 				},
 				lualine_x = {
 					{
+						-- show Macros messages such as recording @
+						require("noice").api.statusline.mode.get,
+						cond = require("noice").api.statusline.mode.has,
+						color = { fg = "#ff9e64" },
+					},
+
+					{
 						"encoding",
 						show_bomb = true,
 						fmt = string.upper,
