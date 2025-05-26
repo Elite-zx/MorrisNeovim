@@ -5,6 +5,8 @@ settings["treesitter_deps"] = {
 	"c",
 	"cpp",
 	"lua",
+	"python",
+	"typescript",
 	"make",
 	"vim",
 	"vimdoc",
