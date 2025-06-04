@@ -579,6 +579,7 @@ return {
 					cpp = { "clang-format" },
 					c = { "clang-format" },
 					yaml = { "yamlfmt" },
+					python= {"black"}
 				},
 			}
 		end,
