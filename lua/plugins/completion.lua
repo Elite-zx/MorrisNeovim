@@ -562,10 +562,10 @@ return {
 			end
 
 			-- format the file and write
-			-- vim.keymap.set("n", "<leader>w", function()
-			-- 	require("conform").format({ lsp_format = "fallback" }) -- 触发格式化
-			-- 	vim.cmd("write")
-			-- end, { desc = "Format and save buffer" })
+			vim.keymap.set("n", "<leader>gw", function()
+				require("conform").format({ lsp_format = "fallback" }) -- 触发格式化
+				vim.cmd("write")
+			end, { desc = "Format and save buffer" })
 
 			-- format git hunks and write
 			vim.keymap.set("n", "<leader>w", function()
@@ -579,7 +579,9 @@ return {
 					cpp = { "clang-format" },
 					c = { "clang-format" },
 					yaml = { "yamlfmt" },
-					python= {"black"}
+					python = { "black" },
+					typescript = { "prettier" },
+					javascript = { "prettier" },
 				},
 			}
 		end,
