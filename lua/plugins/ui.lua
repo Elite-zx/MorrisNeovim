@@ -181,95 +181,6 @@ return {
 			alpha.setup(startify.opts)
 		end,
 	},
-	-- statusline
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {
-			options = {
-				icons_enabled = true,
-				theme = "auto",
-				disabled_filetypes = { statusline = { "alpha" } },
-				component_separators = "",
-				section_separators = { left = "", right = "" },
-			},
-			sections = {
-				lualine_a = { "mode" },
-				lualine_b = {
-					{
-						"filename",
-						file_status = false,
-						path = 4,
-					},
-					components.file_status,
-				},
-				lualine_c = {
-					{
-						"branch",
-						icon = icons.git_nosep.Branch,
-						cond = conditionals.has_git,
-					},
-					{
-						"diff",
-						symbols = {
-							added = icons.git.Add,
-							modified = icons.git.Mod_alt,
-							removed = icons.git.Remove,
-						},
-						source = diff_source,
-						colored = true,
-						cond = conditionals.has_git,
-						padding = { right = 1 },
-					},
-					{ utils.force_centering },
-					{
-						"diagnostics",
-						sources = { "nvim_diagnostic" },
-						sections = { "error", "warn", "info", "hint" },
-						symbols = {
-							error = icons.diagnostics.Error,
-							warn = icons.diagnostics.Warning,
-							info = icons.diagnostics.Information,
-							hint = icons.diagnostics.Hint_alt,
-						},
-					},
-					components.lsp,
-				},
-				lualine_x = {
-					{
-						-- show Macros messages such as recording @
-						require("noice").api.statusline.mode.get,
-						cond = require("noice").api.statusline.mode.has,
-						color = { fg = "#ff9e64" },
-					},
-
-					{
-						"encoding",
-						show_bomb = true,
-						fmt = string.upper,
-						padding = { right = 1 },
-						cond = conditionals.has_enough_room,
-					},
-				},
-				lualine_y = {
-					components.python_venv,
-					components.cwd,
-				},
-				lualine_z = { components.file_location },
-			},
-			inactive_sections = {
-				lualine_a = {},
-				lualine_b = {},
-				lualine_c = { "filename" },
-				lualine_x = { "location" },
-				lualine_y = {},
-				lualine_z = {},
-			},
-			tabline = {},
-			extensions = { "quickfix", "neo-tree", "trouble" }, --clean lualine in neo-treeb
-		},
-	},
-
 	{
 		"lukas-reineke/indent-blankline.nvim",
 		main = "ibl",
@@ -473,6 +384,95 @@ return {
 					["cmp.entry.get_documentation"] = true, -- requires hrsh7th/nvim-cmp
 				},
 			},
+		},
+	},
+
+	-- statusline
+	{
+		"nvim-lualine/lualine.nvim",
+		dependencies = { "nvim-tree/nvim-web-devicons" },
+		opts = {
+			options = {
+				icons_enabled = true,
+				theme = "auto",
+				disabled_filetypes = { statusline = { "alpha" } },
+				component_separators = "",
+				section_separators = { left = "", right = "" },
+			},
+			sections = {
+				lualine_a = { "mode" },
+				lualine_b = {
+					{
+						"filename",
+						file_status = false,
+						path = 4,
+					},
+					components.file_status,
+				},
+				lualine_c = {
+					{
+						"branch",
+						icon = icons.git_nosep.Branch,
+						cond = conditionals.has_git,
+					},
+					{
+						"diff",
+						symbols = {
+							added = icons.git.Add,
+							modified = icons.git.Mod_alt,
+							removed = icons.git.Remove,
+						},
+						source = diff_source,
+						colored = true,
+						cond = conditionals.has_git,
+						padding = { right = 1 },
+					},
+					{ utils.force_centering },
+					{
+						"diagnostics",
+						sources = { "nvim_diagnostic" },
+						sections = { "error", "warn", "info", "hint" },
+						symbols = {
+							error = icons.diagnostics.Error,
+							warn = icons.diagnostics.Warning,
+							info = icons.diagnostics.Information,
+							hint = icons.diagnostics.Hint_alt,
+						},
+					},
+					components.lsp,
+				},
+				lualine_x = {
+					{
+						-- show Macros messages such as recording @
+						require("noice").api.statusline.mode.get,
+						cond = require("noice").api.statusline.mode.has,
+						color = { fg = "#ff9e64" },
+					},
+
+					{
+						"encoding",
+						show_bomb = true,
+						fmt = string.upper,
+						padding = { right = 1 },
+						cond = conditionals.has_enough_room,
+					},
+				},
+				lualine_y = {
+					components.python_venv,
+					components.cwd,
+				},
+				lualine_z = { components.file_location },
+			},
+			inactive_sections = {
+				lualine_a = {},
+				lualine_b = {},
+				lualine_c = { "filename" },
+				lualine_x = { "location" },
+				lualine_y = {},
+				lualine_z = {},
+			},
+			tabline = {},
+			extensions = { "quickfix", "neo-tree", "trouble" }, --clean lualine in neo-treeb
 		},
 	},
 }
