@@ -62,7 +62,7 @@ return {
 				desc = "search for a pattern with `grep` or `rg` plus",
 			},
 			{
-				"<leader>fC",
+				"<leader>fW",
 				function()
 					fuzzy_grep_search(require("fzf-lua").grep_cword)
 				end,

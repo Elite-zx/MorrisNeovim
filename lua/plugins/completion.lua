@@ -7,11 +7,9 @@ local icons = require("utils.icons")
 -- on_attach is a callback function for a LSP server,
 -- which executed when lsp attached a buffer
 local function on_attach(client, bufnr)
-	-- 禁用语义高亮，交给 treesitter 处理
 	if client.server_capabilities.semanticTokensProvider then
 		client.server_capabilities.semanticTokensProvider = nil
 	end
-	-- 禁用 LSP 代码格式化（交给 conform.nvim 处理）
 	client.server_capabilities.documentFormattingProvider = false
 	client.server_capabilities.documentFormattingRangeProvider = false
 end
@@ -20,6 +18,7 @@ return {
 	-- Mason-LSPConfig (closes some gaps that exist between mason.nvim and lspconfig)
 	{
 		"williamboman/mason-lspconfig.nvim",
+		tag = "v1.32.0",
 		dependencies = { {
 			"williamboman/mason.nvim",
 			opts = {},
@@ -115,32 +114,25 @@ return {
 						},
 						on_attach = on_attach,
 						commands = {
-							ClangdSwitchSourceHeader = {
+							LspClangdSwitchSourceHeader = {
 								function()
 									switch_source_header_splitcmd(0, "edit")
 								end,
 								description = "Open source/header in current buffer",
 							},
-							ClangdSwitchSourceHeaderVSplit = {
+							LspClangdSwitchSourceHeaderVSplit = {
 								function()
 									switch_source_header_splitcmd(0, "vsplit")
 								end,
 								description = "Open source/header in a new vsplit",
 							},
-							ClangdSwitchSourceHeaderSplit = {
+							LspClangdSwitchSourceHeaderSplit = {
 								function()
 									switch_source_header_splitcmd(0, "split")
 								end,
 								description = "Open source/header in a new split",
 							},
 						},
-						-- gh: go to header
-						vim.keymap.set(
-							"n",
-							"gh",
-							"<cmd>ClangdSwitchSourceHeader<CR>",
-							{ desc = "go to class file header" }
-						),
 					})
 				end,
 
