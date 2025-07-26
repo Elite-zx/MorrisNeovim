@@ -588,6 +588,7 @@ return {
 					cpp = { "clang-format" },
 					c = { "clang-format" },
 					go = { "gofmt" },
+					proto = { "buf" },
 					python = { "black" },
 					typescript = { "prettier" },
 					javascript = { "js_beautify" },
