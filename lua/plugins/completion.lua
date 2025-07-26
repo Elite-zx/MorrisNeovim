@@ -133,6 +133,10 @@ return {
 								description = "Open source/header in a new split",
 							},
 						},
+						-- gh: go to header
+						vim.keymap.set("n", "gh", "<cmd>LspClangdSwitchSourceHeader<CR>",
+							{ desc = "go to class file header" })
+
 					})
 				end,
 

@@ -114,5 +114,3 @@ map("n", "<leader>v", "printf('`[%s`]', getregtype()[0])", {
 	desc = "reselect last pasted area",
 })
 
--- gh: go to header
-map("n", "gh", "<cmd>LspClangdSwitchSourceHeader<CR>", { desc = "go to class file header" })
