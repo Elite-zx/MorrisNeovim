@@ -510,15 +510,15 @@ return {
 		keys = {
 			-- l: list
 			{
-				-- d: diagnostics
 				"<leader>ld",
-				"<cmd>Trouble diagnostics toggle<cr>",
-				desc = "All opened buffer diagnostics (Trouble)",
-			},
-			{
-				"<leader>lD",
 				"<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
 				desc = "Current buffer diagnostics (Trouble)",
+			},
+			{
+				-- d: diagnostics
+				"<leader>lD",
+				"<cmd>Trouble diagnostics toggle<cr>",
+				desc = "All opened buffer diagnostics (Trouble)",
 			},
 			{
 				--s: symbols

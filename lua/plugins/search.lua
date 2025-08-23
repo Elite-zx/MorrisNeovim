@@ -113,6 +113,10 @@ return {
 				fzf = {
 					["ctrl-j"] = "down",
 					["ctrl-k"] = "up",
+					["ctrl-f"]      = "half-page-down",
+					["ctrl-b"]      = "half-page-up",
+					["alt-g"]       = "first",  -- FIXME: set option to alt in iterm2
+					["alt-G"]       = "last",
 				},
 			},
 		},

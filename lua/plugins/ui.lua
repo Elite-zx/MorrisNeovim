@@ -439,16 +439,15 @@ return {
 							hint = icons.diagnostics.Hint_alt,
 						},
 					},
-					components.lsp,
-				},
-				lualine_x = {
 					{
 						-- show Macros messages such as recording @
 						require("noice").api.statusline.mode.get,
 						cond = require("noice").api.statusline.mode.has,
 						color = { fg = "#ff9e64" },
 					},
-
+					components.lsp,
+				},
+				lualine_x = {
 					{
 						"encoding",
 						show_bomb = true,
