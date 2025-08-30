@@ -168,3 +168,6 @@ opt.undofile = true
 opt.undodir = undodir
 opt.undolevels = 1000
 opt.undoreload = 10000
+
+-- controls the maximum length of the first line (summary) of a Git commit
+global.gitcommit_summary_length = 72

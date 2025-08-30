@@ -57,6 +57,14 @@ map("n", [[\d]], "<cmd>bprevious <bar> bdelete #<cr><cmd>echo 'Deleted current b
 
 -- Replace visual selection with clipboard content without overwriting default register
 map("x", "p", '"_c<Esc>p')
+map(
+	"n",
+	"<leader>p",
+	":set paste!<CR>:echo 'Paste mode: ' . (&paste ? 'ON' : 'OFF')<CR>",
+	{ noremap = true, silent = true }
+)
+
+
 
 -- Insert a semicolon at the end of the line (Alt+;)
 map("i", "<A-;>", "<Esc>miA;<Esc>`ii")
