@@ -441,8 +441,17 @@ return {
 					},
 					{
 						-- show Macros messages such as recording @
-						require("noice").api.statusline.mode.get,
-						cond = require("noice").api.statusline.mode.has,
+						function()
+							local ok, noice = pcall(require, "noice")
+							if ok and noice and noice.api and noice.api.statusline and noice.api.statusline.mode then
+								return noice.api.statusline.mode.get()
+							end
+							return ""
+						end,
+						cond = function()
+							local ok, noice = pcall(require, "noice")
+							return ok and noice and noice.api and noice.api.statusline and noice.api.statusline.mode and noice.api.statusline.mode.has()
+						end,
 						color = { fg = "#ff9e64" },
 					},
 					components.lsp,
