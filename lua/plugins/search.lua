@@ -44,16 +44,16 @@ return {
 		dependencies = { "nvim-tree/nvim-web-devicons" },
 		keys = {
 			-- Find content with ripGrep among files under current directory
-			{ "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Find file under cur dir" },
-			{ "<leader>fF", find_files_plus, desc = "Find file with specific dir" },
-			{ "<leader>fH", "<cmd>FzfLua git_files<cr>", desc = "Find file under git repo (home)" },
+			{ "<leader>ff", "<cmd>FzfLua files<cr>",       desc = "Find file under cur dir" },
+			{ "<leader>fF", find_files_plus,               desc = "Find file with specific dir" },
+			{ "<leader>fH", "<cmd>FzfLua git_files<cr>",   desc = "Find file under git repo (home)" },
 
-			{ "<leader>fg", "<cmd>FzfLua grep<cr><cr>", desc = "search for a pattern with rg" },
-			{ "<leader>fw", "<cmd>FzfLua grep_cword<cr>", desc = "search word under cursor" },
-			{ "<leader>fv", "<cmd>FzfLua grep_visual<cr>", desc = "search visual selection", mode = "v" },
-			{ "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "find buffer files" },
-			{ "<leader>fs", "<cmd>FzfLua treesitter<cr>", desc = "current buffer treesitter symbols" },
-			{ "<leader>fl", "<cmd>FzfLua resume<cr>", desc = "resume last search result" },
+			{ "<leader>fg", "<cmd>FzfLua grep<cr><cr>",    desc = "search for a pattern with rg" },
+			{ "<leader>fw", "<cmd>FzfLua grep_cword<cr>",  desc = "search word under cursor" },
+			{ "<leader>fv", "<cmd>FzfLua grep_visual<cr>", desc = "search visual selection",          mode = "v" },
+			{ "<leader>fb", "<cmd>FzfLua buffers<cr>",     desc = "find buffer files" },
+			{ "<leader>fs", "<cmd>FzfLua treesitter<cr>",  desc = "current buffer treesitter symbols" },
+			{ "<leader>fl", "<cmd>FzfLua resume<cr>",      desc = "resume last search result" },
 			{
 				"<leader>fG",
 				function()
@@ -106,20 +106,28 @@ return {
 					cmd = "git ls-files --exclude-standard",
 				},
 			},
+			preview = {
+				default = 'bat'
+			},
 			keymap = {
 				builtin = {
-					["?"] = "toggle-help",
+					["?"]     = "toggle-help",
+					page_up   = '<PageUp>', -- preview scroll up
+					page_down = '<PageDown>', -- preview scroll down
 				},
 				fzf = {
-					["ctrl-j"] = "down",
-					["ctrl-k"] = "up",
-					["ctrl-f"] = "half-page-down",
-					["ctrl-b"] = "half-page-up",
-					["alt-g"] = "first", -- FIXME: set option to alt in iterm2
-					["alt-G"] = "last",
+					["ctrl-j"]    = "down",
+					["ctrl-k"]    = "up",
+					["ctrl-f"]    = "half-page-down",
+					["ctrl-b"]    = "half-page-up",
+					["alt-g"]     = "first", -- FIXME: set option to alt in iterm2
+					["alt-G"]     = "last",
+					["page-down"] = "preview-page-down",
+					["page-up"]   = "preview-page-up",
 				},
 			},
 		},
+
 	},
 
 	-- {

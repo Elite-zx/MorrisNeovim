@@ -122,3 +122,4 @@ map("n", "<leader>v", "printf('`[%s`]', getregtype()[0])", {
 	desc = "reselect last pasted area",
 })
 
+
