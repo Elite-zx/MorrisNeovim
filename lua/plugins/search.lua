@@ -88,8 +88,18 @@ return {
 				["--highlight-line"] = true,
 			},
 			winopts = {
+				border  = "rounded",
+				height  = 1, -- window height
+				width   = 0.8, -- window width
 				preview = {
-					layout = "vertical", -- horizontal|vertical|flex
+					-- Use Neovim builtin previewer (unset default)
+					layout     = "vertical",
+					vertical   = "down:60%",
+					horizontal = "right:60%",
+					wrap       = true,
+					title      = true,
+					scrollbar  = "border",
+					title_pos  = "center",
 				},
 			},
 			files = {
@@ -106,24 +116,25 @@ return {
 					cmd = "git ls-files --exclude-standard",
 				},
 			},
-			preview = {
-				default = 'bat'
+			previewers = {
+				bat = {
+					cmd  = "bat",
+					args = "--color=always --style=numbers,changes",
+				},
 			},
 			keymap = {
 				builtin = {
-					["?"]     = "toggle-help",
-					page_up   = '<PageUp>', -- preview scroll up
-					page_down = '<PageDown>', -- preview scroll down
+					["?"]          = "toggle-help",
+					["<PageDown>"] = "preview-page-down",
+					["<PageUp>"]   = "preview-page-up",
 				},
 				fzf = {
-					["ctrl-j"]    = "down",
-					["ctrl-k"]    = "up",
-					["ctrl-f"]    = "half-page-down",
-					["ctrl-b"]    = "half-page-up",
-					["alt-g"]     = "first", -- FIXME: set option to alt in iterm2
-					["alt-G"]     = "last",
-					["page-down"] = "preview-page-down",
-					["page-up"]   = "preview-page-up",
+					["ctrl-j"] = "down",
+					["ctrl-k"] = "up",
+					["ctrl-f"] = "half-page-down",
+					["ctrl-b"] = "half-page-up",
+					["alt-g"]  = "first",
+					["alt-G"]  = "last",
 				},
 			},
 		},
