@@ -111,4 +111,45 @@ return {
 		},
 	},
 
+	{
+		"folke/flash.nvim",
+		event = "VeryLazy",
+		---@type Flash.Config
+		opts = {
+			-- Favor home-row labels for speed
+			labels = "asdfghjklqwertyuiopzxcvbnm",
+			-- Tight, local jumping ideal for paragraphs
+			search = {
+				multi_window = false,
+				wrap = false,
+				mode = "search",
+				incremental = true,
+			},
+			-- Streamlined jump behavior
+			jump = {
+				autojump = true,
+				nohlsearch = true,
+			},
+			highlight = {
+				backdrop = false,
+				matches = true,
+			},
+			modes = {
+				-- Keep search integration opt-in; toggle with <C-s>
+				search = { enabled = false, highlight = { backdrop = false } },
+				-- Enhance f/t motions only if desired; keep minimal
+				char = { enabled = true, jump_labels = false, multi_line = true },
+			},
+		},
+		-- Minimal, ergonomic keymaps focused on quick in-paragraph jumps
+		-- s: jump, S: treesitter, r/R: remote/treesitter search, <C-s>: toggle search integration
+		keys = {
+			{ "<leader>ef", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash Jump" },
+			{ "<leader>eF", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+			{ "<leader>er", mode = "o", function() require("flash").remote() end, desc = "Flash Remote" },
+			{ "<leader>eR", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Flash TS Search" },
+		},
+	}
+
+
 }
